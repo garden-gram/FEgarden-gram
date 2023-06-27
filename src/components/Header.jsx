@@ -1,16 +1,18 @@
-import React from 'react'
-import styled from "styled-components";
+import React from 'react';
+import styled from 'styled-components';
 
 function Header() {
-    return (
-        <StHeader>
-            <div>Garden-gram<Img src='../assets/icon/logo_white.svg' alt='logo' /></div>
-
-        </StHeader>
-    )
+  return (
+    <StHeader>
+      <div>
+        Garden-gram
+        <Img src="../assets/icon/logo_white.svg" alt="logo" />
+      </div>
+    </StHeader>
+  );
 }
 
-export default Header
+export default Header;
 
 const StHeader = styled.div`
   border: 1px solid #ddd;
@@ -19,11 +21,8 @@ const StHeader = styled.div`
   justify-content: center;
   align-items: center;
   padding: 0 20px;
-  
-  background-color: #6C8D64;
-`
 
-const Img = styled.img`
+  background-color: #6c8d64;
+`;
 
-`
-
+const Img = styled.img``;
