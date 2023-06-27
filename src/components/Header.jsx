@@ -8,7 +8,7 @@ const Header = () => {
 
   return (
     <StHeader onClick={() => navigate('/')}>
-      <StTitle>Garden-gram</StTitle>
+      <StTitle>Garden Gram</StTitle>
       <StImg src={Logo} alt="Garden-gram-logo" />
     </StHeader>
   );
@@ -16,23 +16,22 @@ const Header = () => {
 
 export default Header;
 const StTitle = styled.div`
-  font-size: 64px;
+  font-size: 3rem;
   color: #ffffff;
-  margin-right: 30px;
+  margin-right: 1.8rem;
 `;
 
 const StImg = styled.img`
-  width: 52px;
-  height: 66.58px;
+  width: 3.5rem;
+  height: 4rem;
 `;
 
 const StHeader = styled.div`
   border: 1px solid #ddd;
-  height: 170px;
+  height: 6.25rem;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 0 20px;
 
   background-color: #6c8d64;
   cursor: pointer;
