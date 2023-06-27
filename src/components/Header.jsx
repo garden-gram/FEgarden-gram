@@ -1,16 +1,33 @@
 import React from 'react'
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
+import Logo from "../assets/icon/logo_white.svg";
 
-function Header() {
+const Header = () => {
+
+    const navigate = useNavigate();
+
     return (
-        <StHeader>
-            <div>Garden-gram<Img src='../assets/icon/logo_white.svg' alt='logo' /></div>
-
+        <StHeader onClick={() => navigate("/")}>
+            <StTitle>
+                Garden-gram
+            </StTitle>
+            <StImg src={Logo} alt='Garden-gram-logo' />
         </StHeader>
     )
 }
 
 export default Header
+const StTitle = styled.div`
+    font-size: 64px;
+    color: #ffffff;
+    margin-right: 30px;
+`
+
+const StImg = styled.img`
+width: 52px;
+height: 66.58px;
+`
 
 const StHeader = styled.div`
   border: 1px solid #ddd;
@@ -21,9 +38,9 @@ const StHeader = styled.div`
   padding: 0 20px;
   
   background-color: #6C8D64;
-`
-
-const Img = styled.img`
+  cursor: pointer;
 
 `
+
+
 
