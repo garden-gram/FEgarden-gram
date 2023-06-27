@@ -43,8 +43,8 @@ const StModalBox = styled.div`
 
 const StModalContents = styled.div`
   background-color: #fff;
-  width: 50%;
-  height: 75%;
+  width: 35rem;
+  height: 42rem;
   border-radius: 12px;
-  margin: 10px;
+  margin: 1rem;
 `;
