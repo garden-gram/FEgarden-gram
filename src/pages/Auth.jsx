@@ -15,7 +15,7 @@ function LoginPage() {
       const uid = userCredential.user.uid;
 
       // 로그인 성공 시 확인
-      console.log('로그인 성공:', uid);
+      alert('로그인이 완료되었습니다.');
 
       // uid를 사용하여 로그인 처리
       // ...
@@ -33,6 +33,8 @@ function LoginPage() {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const uid = userCredential.user.uid;
 
+      // 회원가입 완료 시 확인
+      alert('회원가입이 완료되었습니다.');
       // uid를 사용하여 회원가입 처리
       // ...
     } catch (error) {
