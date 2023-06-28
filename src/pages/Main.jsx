@@ -1,13 +1,16 @@
-import React from 'react'
-import Header from '../components/Header'
+import React from 'react';
+import Header from '../components/Header';
+import PostModal from '../components/PostModal';
 
 function Main() {
-    return (
-        <>
-            <Header />
-            <div>Main</div>
-        </>
-    )
+  return (
+    <>
+      {/* <Header /> */}
+      <div>
+        <PostModal />
+      </div>
+    </>
+  );
 }
 
-export default Main
+export default Main;
