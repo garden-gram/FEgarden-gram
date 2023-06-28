@@ -1,15 +1,15 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { css, styled } from 'styled-components';
 import userImg from '../assets/icon/userImg.png';
 import { db, storage } from '../firebase';
 import { getDownloadURL, ref, uploadString } from 'firebase/storage';
 import { addDoc, collection } from 'firebase/firestore';
 import { v4 as uuidv4 } from 'uuid';
+import { FaRegWindowClose } from 'react-icons/fa';
 
-function PostModal({ closeModal }) {
+function Post({ closeModal }) {
   const [attachment, setAttachment] = useState('');
   const [contents, setContents] = useState('');
-  const fileInput = useRef();
 
   // TODO: userData를 리덕스로 가져와야함
   // const userObj = useSelector(state => {
@@ -17,43 +17,47 @@ function PostModal({ closeModal }) {
   // })
   const userObj = {
     uid: '56da4645aaa',
-    name: '아이유'
+    name: '아이유',
+    users_img: 'default'
   };
 
-  const { uid, name } = userObj;
+  const { uid, name, users_img } = userObj;
 
   const onSubmitGram = async (e) => {
     e.preventDefault();
-    let confirm = window.confirm('정말로 게시하시겠습니다?');
-    if (!confirm) return;
-    if (attachment === '') return alert('이미지를 넣어주세요');
-    if (contents === '') return alert('게시글 내용을 작성해주세요');
+    try {
+      if (attachment === '') return alert('이미지를 넣어주세요');
+      if (contents === '') return alert('게시글 내용을 작성해주세요');
+      let confirm = window.confirm('게시하시겠습니까?');
+      if (!confirm) return;
 
-    let attachmentUrl = '';
-    const attachmentRef = ref(storage, `${uid}/${uuidv4()}`);
-    await uploadString(attachmentRef, attachment, 'data_url');
-    attachmentUrl = await getDownloadURL(ref(storage, attachmentRef));
-    const users_img = userObj.img ?? 'default';
-    const gramObj = {
-      feed_id: `${uid}/${uuidv4()}`,
-      name,
-      users_img,
-      posts_image: attachmentUrl,
-      like_count: 0,
-      contents,
-      time: Date.now()
-    };
-    await addDoc(collection(db, 'gram'), gramObj);
-    setContents('');
-    setAttachment('');
-    alert('성공적으로 게시되었습니다.');
-    closeModal();
+      const attachmentRef = ref(storage, `${uid}/${uuidv4()}`);
+      await uploadString(attachmentRef, attachment, 'data_url');
+      const attachmentUrl = await getDownloadURL(ref(storage, attachmentRef));
+      const gramObj = {
+        feed_id: `${uid}/${uuidv4()}`,
+        name,
+        users_img,
+        posts_image: attachmentUrl,
+        like_count: 0,
+        contents,
+        time: Date.now()
+      };
+      await addDoc(collection(db, 'gram'), gramObj);
+      setContents('');
+      setAttachment('');
+      alert('성공적으로 게시되었습니다.');
+      closeModal();
+    } catch (err) {
+      alert('오류가 발생했습니다. 새로고침 후 다시 시도해보세요');
+    }
   };
 
   const onFileChange = (e) => {
     const {
       target: { files }
     } = e;
+    if (files.length === 0) return;
     const theFile = files[0];
     const reader = new FileReader();
     reader.onloadend = (finishedEvent) => {
@@ -67,7 +71,6 @@ function PostModal({ closeModal }) {
 
   const onClearAttachment = () => {
     setAttachment('');
-    fileInput.current.value = null;
   };
 
   const onTextChange = (e) => {
@@ -88,11 +91,13 @@ function PostModal({ closeModal }) {
           <label htmlFor="file">
             <BtnUpload>파일 업로드하기</BtnUpload>
           </label>
-          <ImgInput ref={fileInput} type="file" id="file" accept="image/*" onChange={onFileChange} />
+          <ImgInput type="file" id="file" accept="image/*" onChange={onFileChange} />
           {attachment && (
             <PreView>
               <PreViewImg src={attachment} alt="" />
-              <RemoveImg onClick={onClearAttachment}>X</RemoveImg>
+              <RemoveImg onClick={onClearAttachment}>
+                <FaRegWindowClose size={30} />
+              </RemoveImg>
             </PreView>
           )}
         </ImgBox>
@@ -105,6 +110,9 @@ function PostModal({ closeModal }) {
     </>
   );
 }
+
+export default Post;
+
 const Center = css`
   display: flex;
   justify-content: center;
@@ -136,23 +144,23 @@ const UserName = styled.p`
 
 const ImgBox = styled.div`
   ${Center}
-  width: 460px;
-  height: 460px;
+  width: 28.5rem;
+  height: 28.5rem;
   background-color: #d9d9d9;
   border-radius: 10px;
   position: relative;
 `;
 
 const TextBox = styled.textarea`
-  border: 2px solid #000;
+  border: 2px solid #5c5c5c;
   border-radius: 10px;
   width: 437px;
   height: 100px;
   resize: none;
   font-size: 20px;
 
-  padding: 10px;
-  margin-top: 10px;
+  padding: 0.6rem;
+  margin-top: 0.6rem;
 `;
 
 const Btns = styled.div`
@@ -163,12 +171,12 @@ export const SubmitBtn = styled.button`
   width: 130px;
   height: 50px;
 
-  background-color: #fff;
-  color: #000;
-  border: 4px solid #5d8233;
-  border-radius: 10px;
-  margin-top: 10px;
-  font-size: 20px;
+  background-color: #151d0c;
+  color: #fff;
+  border: 0.1rem solid #76a341;
+  border-radius: 15px;
+  margin-top: 0.6rem;
+  font-size: 1.3rem;
   cursor: pointer;
   &:hover {
     background-color: #5d8233;
@@ -195,16 +203,14 @@ const PreViewImg = styled.img`
 
 const RemoveImg = styled.button`
   position: absolute;
-  font-size: 1.5rem;
   top: 0;
   right: 0;
   background-color: transparent;
   color: #fff;
   border: none;
-  border-radius: 100%;
   cursor: pointer;
   &:hover {
-    color: #000;
+    scale: 1.1;
   }
 `;
 
@@ -216,6 +222,7 @@ const BtnUpload = styled.div`
   ${Center}
   width: 150px;
   height: 30px;
+  font-size: 1.3rem;
   text-decoration: underline;
   font-weight: 500;
   cursor: pointer;
@@ -224,5 +231,3 @@ const BtnUpload = styled.div`
     color: #fff;
   }
 `;
-
-export default PostModal;

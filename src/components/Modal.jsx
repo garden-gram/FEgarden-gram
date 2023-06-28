@@ -1,27 +1,17 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { styled } from 'styled-components';
-import PostModal, { SubmitBtn } from './Post';
+import Post from './Post';
 import { createPortal } from 'react-dom';
 
-function Modal() {
-  const [isOpenModal, setIsOpenModal] = useState(false);
-
-  const openModal = () => {
-    setIsOpenModal(true);
-  };
-
-  const closeModal = () => {
-    setIsOpenModal(false);
-  };
-
+function Modal({ isOpenModal, closeModal }) {
   return (
     <div>
-      <PostModalBtn onClick={openModal}>게시물 등록하기</PostModalBtn>
+      {/* <PostModalBtn onClick={openModal}>게시물 등록하기</PostModalBtn> */}
       {isOpenModal &&
         createPortal(
           <StModalBox>
             <StModalContents>
-              <PostModal closeModal={closeModal} />
+              <Post closeModal={closeModal} />
             </StModalContents>
           </StModalBox>,
           document.getElementById('portal-target')
@@ -51,8 +41,4 @@ const StModalContents = styled.div`
   height: 750px;
   border-radius: 12px;
   margin: 1rem;
-`;
-
-const PostModalBtn = styled(SubmitBtn)`
-  width: 160px;
 `;
