@@ -1,13 +1,14 @@
-import React from 'react'
-import Header from '../components/Header'
+import React from 'react';
+import Header from '../components/Header';
+import PostList from '../components/PostList';
 
 function Main() {
-    return (
-        <>
-            <Header />
-            <div>Main</div>
-        </>
-    )
+  return (
+    <>
+      <Header />
+      <PostList />
+    </>
+  );
 }
 
-export default Main
+export default Main;
