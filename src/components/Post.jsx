@@ -6,11 +6,15 @@ import { getDownloadURL, ref, uploadString } from 'firebase/storage';
 import { addDoc, collection } from 'firebase/firestore';
 import { v4 as uuidv4 } from 'uuid';
 
-function PostModal() {
+function PostModal({ closeModal }) {
   const [attachment, setAttachment] = useState('');
   const [contents, setContents] = useState('');
   const fileInput = useRef();
 
+  // TODO: userData를 리덕스로 가져와야함
+  // const userObj = useSelector(state => {
+  //   return state.user
+  // })
   const userObj = {
     uid: '56da4645aaa',
     name: '아이유'
@@ -20,12 +24,15 @@ function PostModal() {
 
   const onSubmitGram = async (e) => {
     e.preventDefault();
+    let confirm = window.confirm('정말로 게시하시겠습니다?');
+    if (!confirm) return;
+    if (attachment === '') return alert('이미지를 넣어주세요');
+    if (contents === '') return alert('게시글 내용을 작성해주세요');
+
     let attachmentUrl = '';
-    if (attachment !== '') {
-      const attachmentRef = ref(storage, `${userObj.uid}`);
-      await uploadString(attachmentRef, attachment, 'data_url');
-      attachmentUrl = await getDownloadURL(ref(storage, attachmentRef));
-    }
+    const attachmentRef = ref(storage, `${uid}/${uuidv4()}`);
+    await uploadString(attachmentRef, attachment, 'data_url');
+    attachmentUrl = await getDownloadURL(ref(storage, attachmentRef));
     const users_img = userObj.img ?? 'default';
     const gramObj = {
       feed_id: `${uid}/${uuidv4()}`,
@@ -40,6 +47,7 @@ function PostModal() {
     setContents('');
     setAttachment('');
     alert('성공적으로 게시되었습니다.');
+    closeModal();
   };
 
   const onFileChange = (e) => {
@@ -70,7 +78,7 @@ function PostModal() {
   };
 
   return (
-    <Layout>
+    <>
       <PostForm onSubmit={onSubmitGram}>
         <UserInfo>
           <UserImg src={userImg} alt="user_img" />
@@ -91,9 +99,10 @@ function PostModal() {
         <TextBox value={contents} placeholder="내용을 입력해주세요." onChange={onTextChange} />
         <Btns>
           <SubmitBtn>게시하기</SubmitBtn>
+          <ModalCloseBtn onClick={closeModal}>닫기</ModalCloseBtn>
         </Btns>
       </PostForm>
-    </Layout>
+    </>
   );
 }
 const Center = css`
@@ -102,20 +111,11 @@ const Center = css`
   align-items: center;
 `;
 
-const Layout = styled.div`
-  ${Center}
-  height: 100vh;
-`;
-
 const PostForm = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
 
-  width: 600px;
-  height: 80vh;
-
-  border: 2px solid #000;
   padding: 0.6rem;
 `;
 
@@ -147,7 +147,7 @@ const TextBox = styled.textarea`
   border: 2px solid #000;
   border-radius: 10px;
   width: 437px;
-  height: 127px;
+  height: 100px;
   resize: none;
   font-size: 20px;
 
@@ -159,16 +159,25 @@ const Btns = styled.div`
   display: flex;
 `;
 
-const SubmitBtn = styled.button`
-  width: 170px;
-  height: 54px;
-  color: #fff;
+export const SubmitBtn = styled.button`
+  width: 130px;
+  height: 50px;
+
+  background-color: #fff;
+  color: #000;
+  border: 4px solid #5d8233;
   border-radius: 10px;
-  background-color: #5d8233;
   margin-top: 10px;
-  font-size: 24px;
+  font-size: 20px;
   cursor: pointer;
-  border: none;
+  &:hover {
+    background-color: #5d8233;
+    color: #fff;
+  }
+`;
+
+const ModalCloseBtn = styled(SubmitBtn)`
+  margin-left: 30px;
 `;
 
 const PreView = styled.div`
@@ -207,9 +216,7 @@ const BtnUpload = styled.div`
   ${Center}
   width: 150px;
   height: 30px;
-  background: #fff;
-  border: 1px solid rgb(77, 77, 77);
-  border-radius: 10px;
+  text-decoration: underline;
   font-weight: 500;
   cursor: pointer;
   &:hover {
