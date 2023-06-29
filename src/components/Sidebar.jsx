@@ -36,6 +36,10 @@ const StSidebarContent = styled.li`
   &:hover {
     background-color: #d9d9d9;
   }
+
+  /* &.active {
+    font-weight: bold;
+  } */
 `;
 
 export default Sidebar;
