@@ -1,7 +1,34 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import dot_img from '../../assets/icon/dote_edit_delete.svg';
+
+import userImg from '../../assets/icon/userImg.png';
 function PostInfo({ gram }) {
+  const [optionBtn, setOptionBtn] = useState(false);
+
+  const showOptionBtn = () => {
+    setOptionBtn(true);
+  };
+  const hiddenOptionBtn = () => {
+    setOptionBtn(false);
+  };
+
+  const btnsRef = useRef();
+  useEffect(() => {
+    const handler = (event) => {
+      if (btnsRef.current && btnsRef.current !== event.target) {
+        setOptionBtn(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => {
+      document.removeEventListener('mousedown', handler);
+    };
+  }, []);
+
+  const editHandler = () => {};
+  const deleteHandler = () => {};
+
   const { name, users_img, time } = gram;
   const detailDate = (a) => {
     const milliSeconds = new Date() - a;
@@ -25,13 +52,19 @@ function PostInfo({ gram }) {
   return (
     <StInfoWrapper>
       <StProfile>
-        <StUserImg src={users_img} />
+        <StUserImg src={userImg} />
         <StUserName>{name}</StUserName>
       </StProfile>
 
       <StInfo>
         <StTime>{nowDate}</StTime>
-        <img src={dot_img} alt="dot" />
+        <Dote src={dot_img} alt="dot" onClick={showOptionBtn} />
+        {optionBtn && (
+          <OptionBtns ref={btnsRef}>
+            <EditBtn>수정</EditBtn>
+            <DeleteBtn>삭제</DeleteBtn>
+          </OptionBtns>
+        )}
       </StInfo>
     </StInfoWrapper>
   );
@@ -47,6 +80,7 @@ const StInfoWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  position: relative;
 `;
 
 const StProfile = styled.div`
@@ -82,4 +116,40 @@ const StInfo = styled.div`
 
 const StTime = styled.div`
   margin-right: 1rem;
+`;
+
+const OptionBtns = styled.div`
+  width: 92px;
+  height: 72px;
+  border-radius: 10px;
+  border: solid 1px #000;
+  position: absolute;
+
+  right: -100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+
+  cursor: pointer;
+`;
+
+const EditBtn = styled.div`
+  height: 40px;
+  width: 100px;
+  text-align: center;
+  padding: 5px 0;
+
+  &:hover {
+    background-color: #bababa;
+  }
+`;
+
+const DeleteBtn = styled(EditBtn)`
+  border-top: 1px solid #bababa;
+`;
+
+const Dote = styled.img`
+  cursor: pointer;
 `;
