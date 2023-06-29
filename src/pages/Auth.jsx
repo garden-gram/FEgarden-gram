@@ -24,7 +24,8 @@ function LoginPage() {
       console.log(error);
     }
   };
-
+  // ****할일 : 회원가입 버튼 1회 클릭 시 input 창 생성되어 닉네임까지 입력,
+  // 한번 더 클릭 시 회원가입 완료 되면서 닉네임 input 창 없애기.
   const handleSignUp = async (e) => {
     e.preventDefault();
 
