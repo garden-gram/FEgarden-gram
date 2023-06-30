@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import firebase from 'firebase/compat/app';
+// import { auth } from "../firebase"; 얘는 왜 안쓰고...getAuth를 썼을까 ?
 import 'firebase/compat/auth';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import styled from 'styled-components';
@@ -227,7 +228,6 @@ const Description = styled.div`
   background-color: #d9d9d9;
   width: 507px;
   height: 187px;
-  font
 `;
 
 const Form = styled.form`
@@ -262,7 +262,7 @@ const PasswordLabel = styled(Label)`
 const Button = styled.button`
   padding: 10px 20px;
   background-color: #d6d6d6;
-  color: #black;
+  color: #000;
   border: none;
   border-radius: 4px;
   cursor: pointer;
