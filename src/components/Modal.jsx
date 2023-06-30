@@ -28,7 +28,7 @@ const StModalBox = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(99, 98, 98, 0.4);
+  background-color: rgba(99, 99, 99, 0.4);
 
   display: flex;
   align-items: center;
