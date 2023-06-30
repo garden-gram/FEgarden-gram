@@ -1,32 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import Router from './shared/Router';
+import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './firebase';
-import { onAuthStateChanged, updateProfile } from 'firebase/auth';
-
 function App() {
-  const [init, setInit] = useState(false);
-  const [currentUser, setCurrentUser] = useState('');
-  // 로그인한 유저프로필 가져오기
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
-      if (user) {
-        if (user.displayName === null) {
-          const name = user.email.split('@')[0];
-          user.displayName = name;
-        }
-        setCurrentUser({
-          nickName: user.displayName,
-          uid: user.uid,
-          updateProfile: (args) => updateProfile(user, { displayName: user.displayName })
-        });
-      } else {
-        setCurrentUser(null);
-      }
-      setInit(true);
+      console.log('user', user); // 사용자 인증 정보가 변경될 때마다 해당 이벤트를 받아 처리합니다.
     });
   }, []);
-
-  return <>{init ? <Router currentUser={currentUser} isLoggedIn={!!currentUser} /> : '로딩중...'}</>;
+  return <Router />;
 }
 
 export default App;
