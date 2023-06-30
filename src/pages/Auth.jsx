@@ -228,7 +228,6 @@ const Description = styled.div`
   background-color: #d9d9d9;
   width: 507px;
   height: 187px;
-  font
 `;
 
 const Form = styled.form`
@@ -263,7 +262,7 @@ const PasswordLabel = styled(Label)`
 const Button = styled.button`
   padding: 10px 20px;
   background-color: #d6d6d6;
-  color: #black;
+  color: #000;
   border: none;
   border-radius: 4px;
   cursor: pointer;
