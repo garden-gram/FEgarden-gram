@@ -10,7 +10,7 @@ function MainPost({ gram }) {
       <PostInfo gram={gram} />
       <ContentsWrapper>
         <ImgBox>
-          <StImg src={gram.posts_img} />
+          <StImg src={gram.posts_image} />
         </ImgBox>
         <ContentsBox>
           <PostLike gram={gram} />

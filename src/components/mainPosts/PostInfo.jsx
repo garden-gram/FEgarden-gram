@@ -59,6 +59,7 @@ function PostInfo({ gram }) {
       <StInfo>
         <StTime>{nowDate}</StTime>
         <Dote src={dot_img} alt="dot" onClick={showOptionBtn} />
+        {/* auth.currentUser.email === gram.email && (<DOte/>) */}
         {optionBtn && (
           <OptionBtns ref={btnsRef}>
             <EditBtn>수정</EditBtn>

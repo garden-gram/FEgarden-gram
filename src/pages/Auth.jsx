@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import firebase from 'firebase/compat/app';
+// import { auth } from "../firebase"; 얘는 왜 안쓰고...getAuth를 썼을까 ?
 import 'firebase/compat/auth';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 
