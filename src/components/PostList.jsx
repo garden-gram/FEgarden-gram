@@ -4,7 +4,6 @@ import MainPost from './MainPost';
 
 function PostList() {
   const grams = useSelector((state) => state.grams);
-  console.log(grams[0]);
   return (
     <>
       {grams.map((gram) => {
