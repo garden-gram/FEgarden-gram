@@ -3,25 +3,37 @@ import styled from 'styled-components';
 import DefaultProfileImg from '../assets/img/blank_profile.svg';
 import { AiOutlineCheckSquare } from 'react-icons/ai';
 import { FaRegEdit } from 'react-icons/fa';
+import { PiUserSwitch } from 'react-icons/pi';
 import { addDoc, collection, getDocs, query } from 'firebase/firestore';
-import { db } from '../firebase';
-// import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { auth, db, storage } from '../firebase';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { ref, uploadBytes, uploadString } from 'firebase/storage';
 
-// 유저프로필 초기값 설정
 function UserProfile() {
+  // 유저프로필 초기값 설정
   const [editName, setEditName] = useState(false);
-  const [currentUser, setCurrentUser] = useState({ id: '', name: '', user_img: '' }); // 초기에 데이터 없음 -> null 병합 연산자 쓸 예정
+  const [currentUser, setCurrentUser] = useState(''); // 초기에 데이터 없음 -> null 병합 연산자 쓸 예정
 
-  const { id, name, user_img } = currentUser;
-  // const auth = getAuth();
-  // onAuthStateChanged(auth, (user) => {
-  //   if (user) {
-  //     const user = auth.currentUser;
-  //     console.log(user.email);
-  //   } else {
-  //     return;
-  //   }
-  // });
+  // 구조분해할당으로 변수로 쓸 수 있음
+  console.log(currentUser);
+  const { id, NickName, email, user_img } = currentUser;
+
+  // 로그인한 유저프로필 가져오기
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const newCurrentUser = {
+          id: user.uid,
+          NickName: user.displayName ?? user.email.split('@')[0],
+          email: user.email,
+          user_img: user.photoURL
+        };
+        setCurrentUser(newCurrentUser);
+      } else {
+        return;
+      }
+    });
+  }, [auth]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -41,22 +53,62 @@ function UserProfile() {
       // firestore에서 가져온 데이터를 state에 전달
       setCurrentUser(initialUsers[0]);
     };
-
-    fetchData();
+    if (currentUser) {
+      fetchData();
+    }
   }, []);
+
+  const onFileChange = async (e) => {
+    const {
+      target: { files }
+    } = e;
+    // if (files.length === 0) return;
+    const theFile = files[0];
+    const reader = new FileReader();
+    reader.onloadend = (finishedEvent) => {
+      const {
+        currentTarget: { result }
+      } = finishedEvent;
+      setCurrentUser({
+        ...currentUser,
+        user_img: result
+      });
+      console.log(result);
+    };
+    reader.readAsDataURL(theFile);
+    const attachmentRef = ref(storage, `profileImg/${id}`);
+    await uploadBytes(attachmentRef, user_img);
+  };
 
   return (
     // 프로필 제일 바깥 컨테이너
     <CurrentUserProfileContainer>
       {/* 기본으로 설정되는 프로필 이미지 */}
-      <DefaultProfileImage src={DefaultProfileImg} alt="profileImage" />
-
+      <ProfileImageWrapper>
+        <DefaultProfileImage src={DefaultProfileImg} alt="profileImage" />
+        <EditProfileImgIcon>
+          <label htmlFor="fileInput">
+            <PiUserSwitch
+              style={{
+                position: 'absolute',
+                bottom: '15px',
+                right: '10px',
+                backgroundColor: '#ffffff',
+                borderRadius: '50%',
+                padding: '4px'
+              }}
+              size={30}
+            />
+          </label>
+          <FileInput type="file" id="fileInput" accept="image/*" onChange={onFileChange} />
+        </EditProfileImgIcon>
+      </ProfileImageWrapper>
       {/* 프로필 내용(콘텐츠) 담는 리스트 */}
       <CurrentUserProfileList>
         {/* 프로필 내용(콘탠츠) 좌측 부분 */}
         <CurrentUserProfileContentsLeft>
           <div>Nickname</div>
-          <div>User ID</div>
+          <div>Email</div>
           <div>TOTAL POST</div>
           <div>TOTAL LIKE</div>
         </CurrentUserProfileContentsLeft>
@@ -64,7 +116,7 @@ function UserProfile() {
         {/* 프로필 내용(콘탠츠) 우측 부분 */}
         <CurrentUserProfileContentsRight>
           <div>
-            {editName ? <input /> : name}
+            {editName ? <input /> : NickName}
 
             {editName ? (
               <AiOutlineCheckSquare />
@@ -76,7 +128,7 @@ function UserProfile() {
               />
             )}
           </div>
-          <div>test@gmail.com</div>
+          <div>{email}</div>
           <div>2</div>
           <div>14</div>
         </CurrentUserProfileContentsRight>
@@ -139,6 +191,19 @@ const CurrentUserProfileContentsRight = styled.li`
     justify-content: space-between;
     align-items: center;
   }
+`;
+
+const ProfileImageWrapper = styled.div`
+  position: relative;
+`;
+
+// TODO: 커서 모양 바꾸기!!!
+const EditProfileImgIcon = styled.div`
+  cursor: pointer;
+`;
+
+const FileInput = styled.input`
+  display: none;
 `;
 
 export default UserProfile;
