@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import onLike from '../../assets/icon/like.svg';
 import offLike from '../../assets/icon/unLike.svg';
 
-function PostLike({ gram }) {
+function ListLike({ gram }) {
   const [count, setCount] = useState(gram.like_count);
   const [status, setStatus] = useState(false);
 
@@ -26,7 +26,7 @@ function PostLike({ gram }) {
   );
 }
 
-export default PostLike;
+export default ListLike;
 
 const IconContainer = styled.div`
   display: flex;

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import dot_img from '../../assets/icon/dote_edit_delete.svg';
 
 import userImg from '../../assets/icon/userImg.png';
-function PostInfo({ gram }) {
+function ListHeader({ gram }) {
   const [optionBtn, setOptionBtn] = useState(false);
 
   const showOptionBtn = () => {
@@ -71,7 +71,7 @@ function PostInfo({ gram }) {
   );
 }
 
-export default PostInfo;
+export default ListHeader;
 
 const StInfoWrapper = styled.div`
   width: 28rem;

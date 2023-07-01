@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-function PostContents({ gram }) {
+function ListContents({ gram }) {
   return (
     <>
       <StContents>{gram.contents}</StContents>
@@ -9,7 +9,7 @@ function PostContents({ gram }) {
   );
 }
 
-export default PostContents;
+export default ListContents;
 
 const StContents = styled.div`
   padding: 1rem;

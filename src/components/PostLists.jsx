@@ -1,16 +1,16 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import MainPost from './MainPost';
+import List from './List';
 
-function PostList() {
+function PostLists() {
   const grams = useSelector((state) => state.grams);
   return (
     <>
       {grams.map((gram) => {
-        return <MainPost key={gram.id} gram={gram} />;
+        return <List key={gram.id} gram={gram} />;
       })}
     </>
   );
 }
 
-export default PostList;
+export default PostLists;
