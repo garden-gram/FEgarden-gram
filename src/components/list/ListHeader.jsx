@@ -1,16 +1,21 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { DELETE_FEED } from '../../redux/modules/gramData';
+import { deleteDoc, updateDoc, doc } from 'firebase/firestore';
+import { db } from '../../firebase';
+
 import styled from 'styled-components';
 import dot_img from '../../assets/icon/dote_edit_delete.svg';
-
 import userImg from '../../assets/icon/userImg.png';
 function ListHeader({ gram }) {
+  console.log(gram.id);
+  const dispatch = useDispatch();
+  const grams = useSelector((state) => state.grams);
+
   const [optionBtn, setOptionBtn] = useState(false);
 
   const showOptionBtn = () => {
     setOptionBtn(true);
-  };
-  const hiddenOptionBtn = () => {
-    setOptionBtn(false);
   };
 
   const btnsRef = useRef();
@@ -26,8 +31,30 @@ function ListHeader({ gram }) {
     };
   }, []);
 
+  const deleteHandler = async (id) => {
+    try {
+      await deletePost(id);
+      alert('게시글이 삭제 되었습니다.');
+    } catch (error) {
+      alert('삭제 요청이 실패 하였습니다.');
+    }
+  };
+
+  const deletePost = async (id) => {
+    try {
+      console.log('id', id);
+      const postRef = doc(db, 'gram', id);
+      await deleteDoc(postRef);
+      dispatch({
+        type: DELETE_FEED,
+        payload: id
+      });
+    } catch (error) {
+      alert('서버에서 데이터 삭제 요청이 실패 하였습니다.');
+    }
+  };
+
   const editHandler = () => {};
-  const deleteHandler = () => {};
 
   const { name, users_img, time } = gram;
   const detailDate = (a) => {
@@ -58,12 +85,12 @@ function ListHeader({ gram }) {
 
       <StInfo>
         <StTime>{nowDate}</StTime>
-        <Dote src={dot_img} alt="dot" onClick={showOptionBtn} />
+        <Dot src={dot_img} alt="dot" onClick={showOptionBtn} />
         {/* auth.currentUser.email === gram.email && (<DOte/>) */}
         {optionBtn && (
           <OptionBtns ref={btnsRef}>
             <EditBtn>수정</EditBtn>
-            <DeleteBtn>삭제</DeleteBtn>
+            <DeleteBtn onMouseDown={() => deleteHandler(gram.id)}>삭제</DeleteBtn>
           </OptionBtns>
         )}
       </StInfo>
@@ -151,6 +178,7 @@ const DeleteBtn = styled(EditBtn)`
   border-top: 1px solid #bababa;
 `;
 
-const Dote = styled.img`
+const Dot = styled.img`
   cursor: pointer;
+  padding: 0.8rem;
 `;
