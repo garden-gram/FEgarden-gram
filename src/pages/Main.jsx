@@ -12,8 +12,9 @@ import { getdata } from '../redux/modules/gramData';
 function Main() {
   const dispatch = useDispatch();
   useEffect(() => {
+    // 서버에서 post 목록 받아온 뒤 -> 리덕스에 데이터 넣기
     const fetchData = async () => {
-      const q = query(collection(db, 'gram'));
+      const q = query(collection(db, 'gram'), orderBy('time', 'desc'));
       const querySnapshot = await getDocs(q);
 
       const initialGramsData = [];
