@@ -12,7 +12,7 @@ function ListHeader({ gram, name, users_img }) {
   const currentUser = useSelector((state) => state.users);
   const grams = useSelector((state) => state.grams);
 
-  const { time } = gram;
+  const { time, uid } = gram;
 
   const detailDate = (a) => {
     const milliSeconds = new Date() - a;
