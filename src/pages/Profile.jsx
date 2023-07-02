@@ -77,7 +77,7 @@ export default Profile;
 const ScrollToTopButton = styled.button`
   position: fixed;
   bottom: 3rem;
-  right: 38rem;
+  right: 608px;
   padding: 0.7rem;
   background-color: #d6d6d6;
   color: #fff;
