@@ -25,7 +25,6 @@ export default List;
 
 const StPostWrapper = styled.div`
   width: 28rem;
-  // height: 40rem;
   border-radius: 10px;
   margin: 2rem auto 0;
 `;
@@ -41,7 +40,6 @@ const StImg = styled.img`
   overflow: hidden;
   width: 28rem;
   height: 28rem;
-  // margin-top: 0.5rem;
   border-radius: 10px 10px 0 0;
 `;
 

@@ -109,6 +109,8 @@ export default ListHeader;
 const StInfoWrapper = styled.div`
   width: 28rem;
   height: 4.5rem;
+  margin-bottom: 1rem;
+
   background-color: #ffff;
 
   display: flex;
