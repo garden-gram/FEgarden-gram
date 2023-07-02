@@ -226,7 +226,7 @@ const Logo = styled.img`
 `;
 
 const Title = styled.h1`
-  font-size: 7rem;
+  font-size: 6rem;
   margin-top: 0.5rem;
 `;
 

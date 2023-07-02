@@ -1,17 +1,21 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import logoImg from '../assets/icon/logo_white.svg';
 
 function NotFound() {
   const navigate = useNavigate('/');
   const goBack = () => navigate('/');
-  setTimeout(goBack, 2500);
+  setTimeout(goBack, 12500);
 
   return (
     <>
       <FullPage onClick={goBack}>
-        <h1>🥀 알 수 없는 요청입니다.</h1>
-        <h3>메인 페이지로 이동합니다.</h3>
+        <Container>
+          <LogoImg src={logoImg} alt="logoImg" />
+          <TitleMassage>알 수 없는 요청입니다.</TitleMassage>
+        </Container>
+        <Message>메인 페이지로 이동합니다.</Message>
       </FullPage>
     </>
   );
@@ -43,4 +47,22 @@ const FullPage = styled.div`
       opacity: 0;
     }
   }
+`;
+
+const LogoImg = styled.img`
+  width: 4rem;
+  height: 4rem;
+`;
+
+const Container = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const TitleMassage = styled.h1`
+  color: #fff;
+`;
+
+const Message = styled.h3`
+  color: #fff;
 `;
