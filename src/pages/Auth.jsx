@@ -140,7 +140,12 @@ function LoginPage() {
         <Title>Garden Gram</Title>
       </LeftContainer>
       <RightContainer>
-        <Description>설명란</Description>
+        <Description>
+          <h1>Welcome to Garden Gram</h1>
+          가든 그램에서 싱그러운 반려 식물 이야기를
+          <br />
+          모두와 함께 실시간으로 나눠보세요.
+        </Description>
         <Form onSubmit={handleSubmit}>
           <FormGroup>
             <Label htmlFor="email"></Label>
@@ -256,9 +261,10 @@ const RightContainer = styled.div`
 
 const Description = styled.div`
   margin-bottom: 20px;
-  background-color: #d9d9d9;
+  background-color: #fff;
   width: 507px;
   height: 187px;
+  font-size: 18px;
 `;
 
 const Form = styled.form`
