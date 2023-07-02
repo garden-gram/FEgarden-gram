@@ -19,23 +19,26 @@ function Profile() {
   const dispatch = useDispatch();
 
   const currentUser = useSelector((state) => state.users);
-
-  let postCount = 0;
-  const fetchData = async () => {
-    const q = query(collection(db, 'gram'), where('uid', '==', auth.currentUser.uid), orderBy('time', 'desc'));
-    const querySnapshot = await getDocs(q);
-    const initialGramsData = [];
-    querySnapshot.forEach((doc) => {
-      initialGramsData.push({ id: doc.id, ...doc.data() });
-      postCount++;
-      console.log(postCount);
-    });
-    dispatch(getdata(initialGramsData));
-  };
+  const [postCount, setPostCount] = useState(0);
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    const fetchData = async () => {
+      try {
+        if (currentUser.uid !== undefined) fetchData();
+      } catch (error) {
+        console.log(error);
+      }
+      console.log(currentUser.uid);
+      const q = query(collection(db, 'gram'), where('uid', '==', currentUser.uid), orderBy('time', 'desc'));
+      const querySnapshot = await getDocs(q);
+      const initialGramsData = [];
+      querySnapshot.forEach((doc) => {
+        initialGramsData.push({ id: doc.id, ...doc.data() });
+        setPostCount(postCount + 1);
+      });
+      dispatch(getdata(initialGramsData));
+    };
+  }, [currentUser]);
 
   // 게시물 작성 모달
   const [isOpenModal, setIsOpenModal] = useState(false);
