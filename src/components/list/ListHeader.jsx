@@ -121,7 +121,7 @@ const StInfoWrapper = styled.div`
 `;
 
 const StProfile = styled.div`
-  width: 11rem;
+  width: 13rem;
   height: 4.5rem;
 
   display: flex;

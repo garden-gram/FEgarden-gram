@@ -36,7 +36,7 @@ function Main() {
         dispatch(getUserData(userData));
       }
     });
-  }, []);
+  }, [auth]);
 
   // 서버에서 Post목록 전부 받아서 리덕스에 데이터 넣기(실시간 데이터 추적)
   useEffect(() => {
