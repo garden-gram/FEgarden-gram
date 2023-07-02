@@ -171,7 +171,7 @@ function LoginPage() {
                   Done
                 </Button>
                 <Button type="button" onClick={handleSignUpToggle}>
-                  Cancle
+                  Cancel
                 </Button>
               </>
             ) : (

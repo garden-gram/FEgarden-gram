@@ -9,14 +9,13 @@ import { onAuthStateChanged, updateProfile } from 'firebase/auth';
 import { getDownloadURL, ref, uploadBytes, uploadString } from 'firebase/storage';
 import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateUserData } from '../redux/modules/userData';
+import { updateUserData, updateUserImg, updateUserName } from '../redux/modules/userData';
 
 export const defaultUserImage =
   'https://firebasestorage.googleapis.com/v0/b/gardengram-b2bb2.appspot.com/o/blank_profile.svg?alt=media&token=0d5bdcc4-87a1-4995-8a80-90764b93b63e';
 
 function Profile({ postCount, currentUser }) {
   const [editName, setEditName] = useState(false);
-
   const { uid, displayName, photoURL, email } = currentUser;
   const [editedName, setEditedName] = useState('');
   const dispatch = useDispatch();
@@ -44,7 +43,7 @@ function Profile({ postCount, currentUser }) {
     const attachmentUrl = await getDownloadURL(ref(storage, imageRef));
     updateProfile(auth.currentUser, { photoURL: attachmentUrl });
     updateDoc(doc(db, 'users', uid), { user_img: attachmentUrl });
-    dispatch(updateUserData(attachmentUrl));
+    dispatch(updateUserImg(attachmentUrl));
     alert('프로필 사진이 변경되었습니다.');
   };
 
@@ -93,6 +92,8 @@ function Profile({ postCount, currentUser }) {
                     await updateProfile(auth.currentUser, {
                       displayName: editedName
                     });
+                    updateDoc(doc(db, 'users', uid), { nickName: editedName });
+                    dispatch(updateUserName(editedName));
                     setEditName(!editName);
                   }}
                 />

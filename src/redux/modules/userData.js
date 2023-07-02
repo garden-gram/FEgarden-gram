@@ -1,5 +1,6 @@
-export const SET_USER = 'users/SET_user';
-export const UPDATE_USER = 'users/UPDATE_user';
+export const SET_USER = 'users/SET_USER';
+export const UPDATE_USER_NAME = 'users/UPDATE_USER_NAME';
+export const UPDATE_USER_PHOTO_URL = 'users/UPDATE_USER_PHOTO_URL';
 
 export const getUserData = (payload) => {
   return {
@@ -8,9 +9,16 @@ export const getUserData = (payload) => {
   };
 };
 
-export const updateUserData = (payload) => {
+export const updateUserImg = (payload) => {
   return {
-    type: UPDATE_USER,
+    type: UPDATE_USER_PHOTO_URL,
+    payload
+  };
+};
+
+export const updateUserName = (payload) => {
+  return {
+    type: UPDATE_USER_NAME,
     payload
   };
 };
@@ -22,8 +30,10 @@ const users = (state = initialState, action) => {
   switch (action.type) {
     case SET_USER:
       return action.payload;
-    case UPDATE_USER:
+    case UPDATE_USER_PHOTO_URL:
       return { ...state, photoURL: action.payload };
+    case UPDATE_USER_NAME:
+      return { ...state, displayName: action.payload };
     default:
       return state;
   }
