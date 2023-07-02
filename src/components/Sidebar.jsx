@@ -14,8 +14,6 @@ function Sidebar({ openModal, isOpenModal }) {
 
   // 현재 경로 가져오기
   const location = useLocation();
-  // 현재 경로 중 마지막 부분(아이디) 가져오기
-  const currentId = location.pathname.split('/')[3];
 
   // 로그인 시 사이드바에 '로그아웃' 보이고 로그아웃 시 '로그인' 보이게 하기
   const LoginLogout = () => {
@@ -27,23 +25,19 @@ function Sidebar({ openModal, isOpenModal }) {
     }
   };
 
-  // 1) '로그아웃' 클릭 시 3단계 : 알림창 뜨고 확인 클릭 시 logoutAndGoHome 함수 실행
+  // 1) '로그아웃' 클릭 시 : 알림창 뜨고 확인 클릭 시 logoutAndGoHome 함수 실행
   const logoutAlert = () => {
     if (!window.confirm('로그아웃 하시겠습니까?')) return;
     logoutAndGoHome();
   };
 
-  // 2) 로그아웃 확인 클릭 시 홈페이지로 이동 & 로그아웃
-  const logoutAndGoHome = (event) => {
-    navigate('/');
-    logOut(event);
-    window.location.replace('/'); // 홈페이지로 url을 변경하여 다시 로드함(이전페이지 기록이 남지 않음)
-  };
-
-  // 3) 로그아웃 기능
-  const logOut = async () => {
+  // 2) 로그아웃 확인 클릭 시 로그아웃 & 홈페이지로 이동
+  const logoutAndGoHome = async () => {
     alert('정상적으로 로그아웃 되었습니다.');
     await signOut(auth);
+    await navigate('/', { replace: true });
+    // 홈페이지로 url을 변경하여 다시 로드함(이전페이지 기록이 남지 않음)
+    window.location.replace('/');
   };
 
   // 사이드바 활성화 여부 구분
