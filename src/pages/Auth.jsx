@@ -6,32 +6,60 @@ import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, up
 import styled from 'styled-components';
 import backgroundImage from '../assets/img/background_img.jpg';
 import logoImage from '../assets/icon/logo_white.svg';
+import { useNavigate } from 'react-router-dom';
 
 function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSignUp, setIsSignUp] = useState(false);
   const [nickname, setNickname] = useState('');
+  const navigate = useNavigate();
 
+  // 로그인 이벤트 핸들
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
       const auth = getAuth();
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const uid = userCredential.user.uid;
-      console.log(auth.currentUser);
       // 로그인 성공 시 확인
       alert('로그인이 완료되었습니다.');
+      // 로그인 성공 시 메인페이지 이동
+      navigate('/');
     } catch (error) {
       // 로그인 실패 시 에러
-      console.log(error);
+      const errorCode = error.code;
+      let errorMessage = '';
+      // 로그인 유효성 검사
+      if (errorCode === 'auth/wrong-password') {
+        errorMessage = '비밀번호가 일치하지 않습니다.';
+      } else if (errorCode === 'auth/user-not-found') {
+        errorMessage = '가입되지 않은 이메일입니다.';
+      } else {
+        errorMessage = '로그인에 실패했습니다.';
+      }
+
+      alert(errorMessage);
     }
   };
 
+  // 회원가입 이벤트 핸들
   const handleSignUp = async (e) => {
     e.preventDefault();
 
     try {
+      // 비밀번호 유효성 검사
+      if (password.length < 6) {
+        alert('비밀번호는 6자리 이상 입력해주세요.');
+        return;
+      }
+      // 이메일 유효성 검사
+      const emailRegex = /^\S+@\S+\.\S+$/;
+      if (!emailRegex.test(email)) {
+        alert('올바른 이메일 형식을 입력해주세요.');
+        return;
+      }
       const auth = getAuth();
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const uid = userCredential.user.uid;
@@ -51,8 +79,12 @@ function LoginPage() {
       // 회원가입 후 초기화
       setIsSignUp(false);
     } catch (error) {
-      // 회원가입 실패 시 에러
-      console.log(error);
+      // 회원가입 유효성 검사
+      if (error.code === 'auth/email-already-in-use') {
+        alert('중복된 이메일입니다.');
+      } else {
+        console.log(error);
+      }
     }
   };
 
@@ -111,7 +143,7 @@ function LoginPage() {
         <Description>설명란</Description>
         <Form onSubmit={handleSubmit}>
           <FormGroup>
-            <Label htmlFor="email">E-mail</Label>
+            <Label htmlFor="email"></Label>
             <Input
               type="email"
               id="email"
@@ -122,7 +154,6 @@ function LoginPage() {
             />
           </FormGroup>
           <FormGroup>
-            <PasswordLabel htmlFor="password">P / W</PasswordLabel>
             <Input
               type="password"
               id="password"
@@ -134,7 +165,7 @@ function LoginPage() {
           </FormGroup>
           {isSignUp && (
             <FormGroup>
-              <Label htmlFor="nickname">NickName</Label>
+              <Label htmlFor="nickname"></Label>
               <Input
                 type="text"
                 id="nickname"
@@ -243,20 +274,14 @@ const FormGroup = styled.div`
 
 const Label = styled.label`
   font-weight: bold;
-  margin-bottom: 5px;
-  margin-right: 20px;
 `;
 
 const Input = styled.input`
   padding: 5px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  width: 405px;
+  width: 507px;
   height: 50.44px;
-`;
-
-const PasswordLabel = styled(Label)`
-  padding: 5px 5px;
 `;
 
 const Button = styled.button`
@@ -274,6 +299,5 @@ const Button = styled.button`
 const ButtonContainer = styled.div`
   display: flex;
   justify-content: space-between;
-  width: 414px;
-  margin-left: 67px;
+  width: 507px;
 `;
