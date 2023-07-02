@@ -128,6 +128,7 @@ const DefaultProfileImage = styled.img`
   height: 8rem;
   border-radius: 50%;
   margin: 1rem 0rem;
+  object-fit: cover;
 `;
 
 const CurrentUserProfileContainer = styled.div`
