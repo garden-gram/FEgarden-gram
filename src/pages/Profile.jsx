@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import Header from '../components/Header';
 import Modal from '../components/Modal';
 import Sidebar from '../components/Sidebar';
-import PostList from '../components/PostList';
+import PostList from '../components/PostLists';
 import UserProfile from '../components/UserProfile';
 
 import { collection, getDocs, orderBy, query, where } from 'firebase/firestore';
@@ -46,7 +46,7 @@ function Profile() {
       <Header />
       <Sidebar openModal={openModal} />
       <Modal closeModal={closeModal} isOpenModal={isOpenModal} />
-      {auth.currentUser.uid && <UserProfile userId={auth.currentUser.uid} />}
+      <UserProfile />
       <PostList />
     </>
   );
