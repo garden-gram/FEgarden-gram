@@ -57,6 +57,7 @@ const StImg = styled.img`
   width: 28rem;
   height: 28rem;
   border-radius: 10px 10px 0 0;
+  object-fit: cover;
 `;
 
 const ContentsBox = styled.div`
