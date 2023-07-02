@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { DELETE_FEED } from '../../redux/modules/gramData';
+import { DELETE_FEED, updateContent } from '../../redux/modules/gramData';
 import { deleteDoc, updateDoc, doc } from 'firebase/firestore';
 import { db } from '../../firebase';
 
@@ -8,12 +8,30 @@ import styled from 'styled-components';
 import dot_img from '../../assets/icon/dote_edit_delete.svg';
 import userImg from '../../assets/icon/userImg.png';
 function ListHeader({ gram }) {
-  console.log(gram.id);
   const dispatch = useDispatch();
   const grams = useSelector((state) => state.grams);
 
-  const [optionBtn, setOptionBtn] = useState(false);
+  const { name, users_img, time } = gram;
+  const detailDate = (a) => {
+    const milliSeconds = new Date() - a;
+    const seconds = milliSeconds / 1000;
+    if (seconds < 60) return `방금 전`;
+    const minutes = seconds / 60;
+    if (minutes < 60) return `${Math.floor(minutes)}분 전`;
+    const hours = minutes / 60;
+    if (hours < 24) return `${Math.floor(hours)}시간 전`;
+    const days = hours / 24;
+    if (days < 7) return `${Math.floor(days)}일 전`;
+    const weeks = days / 7;
+    if (weeks < 5) return `${Math.floor(weeks)}주 전`;
+    const months = days / 30;
+    if (months < 12) return `${Math.floor(months)}개월 전`;
+    const years = days / 365;
+    return `${Math.floor(years)}년 전`;
+  };
+  const nowDate = detailDate(time);
 
+  const [optionBtn, setOptionBtn] = useState(false);
   const showOptionBtn = () => {
     setOptionBtn(true);
   };
@@ -42,7 +60,6 @@ function ListHeader({ gram }) {
 
   const deletePost = async (id) => {
     try {
-      console.log('id', id);
       const postRef = doc(db, 'gram', id);
       await deleteDoc(postRef);
       dispatch({
@@ -54,27 +71,12 @@ function ListHeader({ gram }) {
     }
   };
 
-  const editHandler = () => {};
-
-  const { name, users_img, time } = gram;
-  const detailDate = (a) => {
-    const milliSeconds = new Date() - a;
-    const seconds = milliSeconds / 1000;
-    if (seconds < 60) return `방금 전`;
-    const minutes = seconds / 60;
-    if (minutes < 60) return `${Math.floor(minutes)}분 전`;
-    const hours = minutes / 60;
-    if (hours < 24) return `${Math.floor(hours)}시간 전`;
-    const days = hours / 24;
-    if (days < 7) return `${Math.floor(days)}일 전`;
-    const weeks = days / 7;
-    if (weeks < 5) return `${Math.floor(weeks)}주 전`;
-    const months = days / 30;
-    if (months < 12) return `${Math.floor(months)}개월 전`;
-    const years = days / 365;
-    return `${Math.floor(years)}년 전`;
+  const editHandler = () => {
+    const editedContent = prompt('수정할 내용을 입력하세요', gram.contents);
+    if (editedContent) {
+      dispatch(updateContent(gram.id, editedContent));
+    }
   };
-  const nowDate = detailDate(time);
 
   return (
     <StInfoWrapper>
@@ -89,7 +91,7 @@ function ListHeader({ gram }) {
         {/* auth.currentUser.email === gram.email && (<DOte/>) */}
         {optionBtn && (
           <OptionBtns ref={btnsRef}>
-            <EditBtn>수정</EditBtn>
+            <EditBtn onMouseDown={() => editHandler(gram.id)}>수정</EditBtn>
             <DeleteBtn onMouseDown={() => deleteHandler(gram.id)}>삭제</DeleteBtn>
           </OptionBtns>
         )}
