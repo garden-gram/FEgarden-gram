@@ -1,13 +1,31 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import ListHeader from './list/ListHeader';
 import ListLike from './list/ListLike';
 import ListContents from './list/ListContents';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '../firebase';
 
 function List({ gram }) {
+  let name, users_img;
+
+  const userData = async () => {
+    const q = doc(db, 'users', gram.uid);
+
+    const querySnapshot = await getDoc(q);
+    console.log(querySnapshot.data());
+    const { user_img, nickName } = querySnapshot.data();
+    name = nickName;
+    users_img = user_img;
+    console.log(user_img, nickName);
+  };
+  useEffect(() => {
+    userData();
+  }, []);
+
   return (
     <StPostWrapper>
-      <ListHeader gram={gram} />
+      <ListHeader gram={gram} users_img={users_img} name={name} />
       <ContentsWrapper>
         <ImgBox>
           <StImg src={gram.posts_image} />

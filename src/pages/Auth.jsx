@@ -7,6 +7,8 @@ import styled from 'styled-components';
 import backgroundImage from '../assets/img/background_img.jpg';
 import logoImage from '../assets/icon/logo_white.svg';
 import { useNavigate } from 'react-router-dom';
+import { signInWithPopup } from 'firebase/auth';
+import googleIcon from '../assets/img/google_icon.png';
 
 function LoginPage() {
   const [email, setEmail] = useState('');
@@ -96,42 +98,23 @@ function LoginPage() {
     setNickname(e.target.value);
   };
 
-  // *********************후순위 소셜로그인
-  // const handleSignInWithGoogle = async (e) => {
-  //   e.preventDefault();
+  // 구글 소셜 로그인
+  const handleSignInWithGoogle = async (e) => {
+    e.preventDefault();
 
-  //   try {
-  //     const auth = getAuth();
-  //     // 구글 로그인 팝업을 통해 인증
-  //     const provider = new firebase.auth.GoogleAuthProvider();
-  //     const userCredential = await signInWithPopup(auth, provider);
-  //     const uid = userCredential.user.uid;
-
-  //     // uid를 사용하여 로그인 처리
-  //     // ...
-  //   } catch (error) {
-  //     // 로그인 실패 시 에러 처리
-  //     console.log(error);
-  //   }
-  // };
-
-  // const handleSignInWithGitHub = async (e) => {
-  //   e.preventDefault();
-
-  //   try {
-  //     const auth = getAuth();
-  //     // 깃허브 로그인 팝업을 통해 인증
-  //     const provider = new firebase.auth.GithubAuthProvider();
-  //     const userCredential = await signInWithPopup(auth, provider);
-  //     const uid = userCredential.user.uid;
-
-  //     // uid를 사용하여 로그인 처리
-  //     // ...
-  //   } catch (error) {
-  //     // 로그인 실패 시 에러 처리
-  //     console.log(error);
-  //   }
-  // };
+    try {
+      const auth = getAuth();
+      // 구글 로그인 팝업을 통해 인증
+      const provider = new firebase.auth.GoogleAuthProvider();
+      const userCredential = await signInWithPopup(auth, provider);
+      const uid = userCredential.user.uid;
+      // uid를 사용하여 로그인 처리
+      navigate('/');
+    } catch (error) {
+      // 로그인 실패 시 에러 처리
+      console.log(error);
+    }
+  };
 
   return (
     <Container>
@@ -154,7 +137,7 @@ function LoginPage() {
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="이메일"
+              placeholder="E-mail"
               required
             />
           </FormGroup>
@@ -164,7 +147,7 @@ function LoginPage() {
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="비밀번호"
+              placeholder="P / W"
               required
             />
           </FormGroup>
@@ -176,7 +159,7 @@ function LoginPage() {
                 id="nickname"
                 value={nickname}
                 onChange={handleNicknameChange}
-                placeholder="닉네임"
+                placeholder="NickName"
                 required
               />
             </FormGroup>
@@ -200,6 +183,12 @@ function LoginPage() {
               </>
             )}
           </ButtonContainer>
+          {!isSignUp && (
+            <SocialButton type="submit" onClick={handleSignInWithGoogle}>
+              <GoogleIcon src={googleIcon} alt="Google Icon" />
+              Sign In With Google
+            </SocialButton>
+          )}
         </Form>
       </RightContainer>
     </Container>
@@ -208,14 +197,6 @@ function LoginPage() {
 
 export default LoginPage;
 
-{
-  /* <button type="submit" onClick={handleSignInWithGoogle}>
-          Sign in with Google
-        </button>
-        <button type="submit" onClick={handleSignInWithGitHub}>
-          Sign in with GitHub
-        </button> */
-}
 // 스타일
 const Container = styled.div`
   display: flex;
@@ -235,18 +216,18 @@ const LeftContainer = styled.div`
   background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(${backgroundImage});
   background-size: cover;
   background-position: center;
-  width: 720px;
+  width: 45rem;
   height: 100vh;
 `;
 
 const Logo = styled.img`
-  width: 100px;
-  height: 100px;
+  width: 7rem;
+  height: 7rem;
 `;
 
 const Title = styled.h1`
-  font-size: 106px;
-  margin-top: 8px;
+  font-size: 7rem;
+  margin-top: 0.5rem;
 `;
 
 const RightContainer = styled.div`
@@ -256,26 +237,26 @@ const RightContainer = styled.div`
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 20px;
+  padding: 1.25rem;
 `;
 
 const Description = styled.div`
-  margin-bottom: 20px;
+  margin-bottom: 1.25rem;
   background-color: #fff;
-  width: 507px;
-  height: 187px;
-  font-size: 18px;
+  width: 31.6rem;
+  height: 11.6rem;
+  font-size: 1.125rem;
 `;
 
 const Form = styled.form`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  margin-top: 20px;
+  margin-top: 1.25rem;
 `;
 
 const FormGroup = styled.div`
-  margin-bottom: 10px;
+  margin-bottom: 0.625rem;
 `;
 
 const Label = styled.label`
@@ -283,27 +264,47 @@ const Label = styled.label`
 `;
 
 const Input = styled.input`
-  padding: 5px;
+  padding: 0.3rem;
   border: 1px solid #ccc;
-  border-radius: 4px;
-  width: 507px;
-  height: 50.44px;
+  border-radius: 0.25rem;
+  width: 31.6rem;
+  height: 3.2rem;
 `;
 
 const Button = styled.button`
-  padding: 10px 20px;
-  background-color: #d6d6d6;
+  border: 1px solid #ccc;
+  border-radius: 0.25rem;
+  background-color: #fff;
   color: #000;
-  border: none;
-  border-radius: 4px;
   cursor: pointer;
-  margin-top: 20px;
-  width: 190.27px;
-  height: 44.84px;
+  margin-top: 1.25rem;
+  width: 15.6rem;
+  height: 2.8rem;
 `;
 
 const ButtonContainer = styled.div`
   display: flex;
   justify-content: space-between;
-  width: 507px;
+  width: 32.4rem;
+`;
+
+const SocialButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.625rem 1.25rem;
+  background-color: #fff;
+  color: #000;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  margin-top: 1.25rem;
+  width: 31.6rem;
+  height: 2.8rem;
+`;
+
+const GoogleIcon = styled.img`
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-right: 0.625rem;
 `;
