@@ -4,7 +4,7 @@ import Modal from '../components/Modal';
 import Sidebar from '../components/Sidebar';
 import PostLists from '../components/PostLists';
 
-import { collection, getDocs, query } from 'firebase/firestore';
+import { collection, getDocs, orderBy, query } from 'firebase/firestore';
 import { db } from '../firebase';
 import { useDispatch } from 'react-redux';
 import { getdata } from '../redux/modules/gramData';
