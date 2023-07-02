@@ -27,9 +27,10 @@ function Main() {
             'https://firebasestorage.googleapis.com/v0/b/gardengram-b2bb2.appspot.com/o/profileImg%2Fblank_profile.svg?alt=media&token=a6ff8689-313f-4608-8498-49e2afa63520';
         }
         const userData = {
-          name: user.displayName,
+          displayName: user.displayName,
           uid: user.uid,
           email: user.email,
+          photoURL: user.photoURL,
           updateProfile: (args) => updateProfile(user, { displayName: user.displayName })
         };
         dispatch(getUserData(userData));

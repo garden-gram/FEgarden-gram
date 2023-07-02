@@ -11,17 +11,22 @@ import { auth, db } from '../firebase';
 
 import { useDispatch } from 'react-redux';
 import { getdata } from '../redux/modules/gramData';
+import { onAuthStateChanged } from 'firebase/auth';
+import { getUserData } from '../redux/modules/userData';
 
 function Profile() {
   // 현재 사용자의 게시물 리스트
   const dispatch = useDispatch();
 
+  let postCount = 0;
   const fetchData = async () => {
     const q = query(collection(db, 'gram'), where('uid', '==', auth.currentUser.uid));
     const querySnapshot = await getDocs(q);
     const initialGramsData = [];
     querySnapshot.forEach((doc) => {
       initialGramsData.push({ id: doc.id, ...doc.data() });
+      postCount++;
+      console.log(postCount);
     });
     dispatch(getdata(initialGramsData));
   };
@@ -46,7 +51,7 @@ function Profile() {
       <Header />
       <Sidebar openModal={openModal} />
       <Modal closeModal={closeModal} isOpenModal={isOpenModal} />
-      <UserProfile />
+      <UserProfile postCount={postCount} />
       <PostList />
     </>
   );

@@ -8,14 +8,18 @@ import { auth, db, storage } from '../firebase';
 import { onAuthStateChanged, updateProfile } from 'firebase/auth';
 import { getDownloadURL, ref, uploadBytes, uploadString } from 'firebase/storage';
 import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateUserData } from '../redux/modules/userData';
 
 export const defaultUserImage =
   'https://firebasestorage.googleapis.com/v0/b/gardengram-b2bb2.appspot.com/o/blank_profile.svg?alt=media&token=0d5bdcc4-87a1-4995-8a80-90764b93b63e';
 
-function Profile() {
+function Profile({ postCount }) {
   const [editName, setEditName] = useState(false);
-  const { uid, displayName, photoURL, email } = auth.currentUser;
+  const currentUser = useSelector((state) => state.users);
+  const { uid, displayName, photoURL, email } = currentUser;
   const [editedName, setEditedName] = useState('');
+  const dispatch = useDispatch();
 
   const fetchUserData = async () => {
     return await getDoc(doc(db, 'users', uid));
@@ -40,9 +44,10 @@ function Profile() {
     const attachmentUrl = await getDownloadURL(ref(storage, imageRef));
     updateProfile(auth.currentUser, { photoURL: attachmentUrl });
     updateDoc(doc(db, 'users', uid), { user_img: attachmentUrl });
+    dispatch(updateUserData(attachmentUrl));
     alert('프로필 사진이 변경되었습니다.');
   };
-  console.log(photoURL);
+  console.log(postCount);
 
   return (
     // 프로필 제일 바깥 컨테이너
@@ -104,7 +109,7 @@ function Profile() {
             </NameEditIconWrapper>
           </div>
           <div>{email}</div>
-          <div>2</div>
+          <div>{postCount || 0}</div>
           <div>14</div>
         </CurrentUserProfileContentsRight>
       </CurrentUserProfileList>
