@@ -67,5 +67,5 @@ const ScrollToTopButton = styled.button`
   width: 3.5rem;
   height: 3.5rem;
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 1.1rem;
 `;
