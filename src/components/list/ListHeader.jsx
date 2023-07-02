@@ -1,33 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { DELETE_FEED, updateContent } from '../../redux/modules/gramData';
+import { deleteDoc, updateDoc, doc } from 'firebase/firestore';
+import { db } from '../../firebase';
+
 import styled from 'styled-components';
 import dot_img from '../../assets/icon/dote_edit_delete.svg';
-
 import userImg from '../../assets/icon/userImg.png';
-function PostInfo({ gram }) {
-  const [optionBtn, setOptionBtn] = useState(false);
-
-  const showOptionBtn = () => {
-    setOptionBtn(true);
-  };
-  const hiddenOptionBtn = () => {
-    setOptionBtn(false);
-  };
-
-  const btnsRef = useRef();
-  useEffect(() => {
-    const handler = (event) => {
-      if (btnsRef.current && btnsRef.current !== event.target) {
-        setOptionBtn(false);
-      }
-    };
-    document.addEventListener('mousedown', handler);
-    return () => {
-      document.removeEventListener('mousedown', handler);
-    };
-  }, []);
-
-  const editHandler = () => {};
-  const deleteHandler = () => {};
+function ListHeader({ gram }) {
+  const dispatch = useDispatch();
+  const grams = useSelector((state) => state.grams);
 
   const { name, users_img, time } = gram;
   const detailDate = (a) => {
@@ -49,6 +31,53 @@ function PostInfo({ gram }) {
   };
   const nowDate = detailDate(time);
 
+  const [optionBtn, setOptionBtn] = useState(false);
+  const showOptionBtn = () => {
+    setOptionBtn(true);
+  };
+
+  const btnsRef = useRef();
+  useEffect(() => {
+    const handler = (event) => {
+      if (btnsRef.current && btnsRef.current !== event.target) {
+        setOptionBtn(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => {
+      document.removeEventListener('mousedown', handler);
+    };
+  }, []);
+
+  const deleteHandler = async (id) => {
+    try {
+      await deletePost(id);
+      alert('게시글이 삭제 되었습니다.');
+    } catch (error) {
+      alert('삭제 요청이 실패 하였습니다.');
+    }
+  };
+
+  const deletePost = async (id) => {
+    try {
+      const postRef = doc(db, 'gram', id);
+      await deleteDoc(postRef);
+      dispatch({
+        type: DELETE_FEED,
+        payload: id
+      });
+    } catch (error) {
+      alert('서버에서 데이터 삭제 요청이 실패 하였습니다.');
+    }
+  };
+
+  const editHandler = () => {
+    const editedContent = prompt('수정할 내용을 입력하세요', gram.contents);
+    if (editedContent) {
+      dispatch(updateContent(gram.id, editedContent));
+    }
+  };
+
   return (
     <StInfoWrapper>
       <StProfile>
@@ -58,12 +87,12 @@ function PostInfo({ gram }) {
 
       <StInfo>
         <StTime>{nowDate}</StTime>
-        <Dote src={dot_img} alt="dot" onClick={showOptionBtn} />
+        <Dot src={dot_img} alt="dot" onClick={showOptionBtn} />
         {/* auth.currentUser.email === gram.email && (<DOte/>) */}
         {optionBtn && (
           <OptionBtns ref={btnsRef}>
-            <EditBtn>수정</EditBtn>
-            <DeleteBtn>삭제</DeleteBtn>
+            <EditBtn onMouseDown={() => editHandler(gram.id)}>수정</EditBtn>
+            <DeleteBtn onMouseDown={() => deleteHandler(gram.id)}>삭제</DeleteBtn>
           </OptionBtns>
         )}
       </StInfo>
@@ -71,7 +100,7 @@ function PostInfo({ gram }) {
   );
 }
 
-export default PostInfo;
+export default ListHeader;
 
 const StInfoWrapper = styled.div`
   width: 28rem;
@@ -151,6 +180,7 @@ const DeleteBtn = styled(EditBtn)`
   border-top: 1px solid #bababa;
 `;
 
-const Dote = styled.img`
+const Dot = styled.img`
   cursor: pointer;
+  padding: 0.8rem;
 `;
