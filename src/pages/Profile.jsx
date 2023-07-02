@@ -17,7 +17,7 @@ function Profile() {
   const dispatch = useDispatch();
 
   const fetchData = async () => {
-    const q = query(collection(db, 'gram'), where('uid', '==', auth.currentUser.uid));
+    const q = query(collection(db, 'gram'), where('uid', '==', auth.currentUser.uid), orderBy('time', 'desc'));
     const querySnapshot = await getDocs(q);
     const initialGramsData = [];
     querySnapshot.forEach((doc) => {
@@ -42,13 +42,13 @@ function Profile() {
   };
 
   return (
-    <>
+    <body style={{ minWidth: '950px' }}>
       <Header />
       <Sidebar openModal={openModal} />
       <Modal closeModal={closeModal} isOpenModal={isOpenModal} />
       <UserProfile />
       <PostList />
-    </>
+    </body>
   );
 }
 
