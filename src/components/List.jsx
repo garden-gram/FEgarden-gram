@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import ListHeader from './list/ListHeader';
 import ListLike from './list/ListLike';
@@ -7,17 +7,15 @@ import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 
 function List({ gram }) {
-  let name, users_img;
+  const [name, setName] = useState('');
+  const [usersImg, setUsersImg] = useState('');
 
   const userData = async () => {
     const q = doc(db, 'users', gram.uid);
-
     const querySnapshot = await getDoc(q);
-    console.log(querySnapshot.data());
     const { user_img, nickName } = querySnapshot.data();
-    name = nickName;
-    users_img = user_img;
-    console.log(user_img, nickName);
+    setName(nickName);
+    setUsersImg(user_img);
   };
   useEffect(() => {
     userData();
@@ -25,7 +23,7 @@ function List({ gram }) {
 
   return (
     <StPostWrapper>
-      <ListHeader gram={gram} users_img={users_img} name={name} />
+      <ListHeader gram={gram} usersImg={usersImg} name={name} />
       <ContentsWrapper>
         <ImgBox>
           <StImg src={gram.posts_image} />

@@ -7,7 +7,7 @@ import { db } from '../../firebase';
 import styled from 'styled-components';
 import dot_img from '../../assets/icon/dote_edit_delete.svg';
 import userImg from '../../assets/icon/userImg.png';
-function ListHeader({ gram, name, users_img }) {
+function ListHeader({ gram, name, usersImg }) {
   const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.users);
   const grams = useSelector((state) => state.grams);
@@ -85,7 +85,7 @@ function ListHeader({ gram, name, users_img }) {
   return (
     <StInfoWrapper>
       <StProfile>
-        <StUserImg src={users_img} />
+        <StUserImg src={usersImg} />
         <StUserName>{name}</StUserName>
       </StProfile>
 

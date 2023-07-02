@@ -197,6 +197,7 @@ const PreViewImg = styled.img`
   top: 0px;
   right: 0px;
   border-radius: 10px;
+  object-fit: cover;
 `;
 
 const RemoveImg = styled.button`
