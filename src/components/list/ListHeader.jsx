@@ -1,17 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { DELETE_FEED, updateContent } from '../../redux/modules/gramData';
-import { deleteDoc, updateDoc, doc } from 'firebase/firestore';
+import { deleteDoc, updateDoc, doc, query, where, collection, getDoc } from 'firebase/firestore';
 import { db } from '../../firebase';
 
 import styled from 'styled-components';
 import dot_img from '../../assets/icon/dote_edit_delete.svg';
 import userImg from '../../assets/icon/userImg.png';
-function ListHeader({ gram }) {
+function ListHeader({ gram, name, users_img }) {
   const dispatch = useDispatch();
   const grams = useSelector((state) => state.grams);
 
-  const { name, users_img, time } = gram;
+  const { time } = gram;
+
   const detailDate = (a) => {
     const milliSeconds = new Date() - a;
     const seconds = milliSeconds / 1000;
