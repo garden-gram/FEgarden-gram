@@ -14,9 +14,9 @@ import { updateUserData } from '../redux/modules/userData';
 export const defaultUserImage =
   'https://firebasestorage.googleapis.com/v0/b/gardengram-b2bb2.appspot.com/o/blank_profile.svg?alt=media&token=0d5bdcc4-87a1-4995-8a80-90764b93b63e';
 
-function Profile({ postCount }) {
+function Profile({ postCount, currentUser }) {
   const [editName, setEditName] = useState(false);
-  const currentUser = useSelector((state) => state.users);
+
   const { uid, displayName, photoURL, email } = currentUser;
   const [editedName, setEditedName] = useState('');
   const dispatch = useDispatch();
@@ -47,7 +47,6 @@ function Profile({ postCount }) {
     dispatch(updateUserData(attachmentUrl));
     alert('프로필 사진이 변경되었습니다.');
   };
-  console.log(postCount);
 
   return (
     // 프로필 제일 바깥 컨테이너
@@ -131,7 +130,7 @@ const DefaultProfileImage = styled.img`
 `;
 
 const CurrentUserProfileContainer = styled.div`
-  margin: 6rem auto;
+  margin: 12rem auto 1rem auto;
   width: 30rem;
   height: 28rem;
   background-color: #d9d9d9;

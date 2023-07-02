@@ -9,7 +9,7 @@ import UserProfile from '../components/UserProfile';
 import { collection, getDocs, orderBy, query, where } from 'firebase/firestore';
 import { auth, db } from '../firebase';
 
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getdata } from '../redux/modules/gramData';
 import { onAuthStateChanged } from 'firebase/auth';
 import { getUserData } from '../redux/modules/userData';
@@ -17,6 +17,8 @@ import { getUserData } from '../redux/modules/userData';
 function Profile() {
   // 현재 사용자의 게시물 리스트
   const dispatch = useDispatch();
+
+  const currentUser = useSelector((state) => state.users);
 
   let postCount = 0;
   const fetchData = async () => {
@@ -51,7 +53,7 @@ function Profile() {
       <Header />
       <Sidebar openModal={openModal} />
       <Modal closeModal={closeModal} isOpenModal={isOpenModal} />
-      <UserProfile postCount={postCount} />
+      <UserProfile currentUser={currentUser} postCount={postCount} />
       <PostList />
     </>
   );

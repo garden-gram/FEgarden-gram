@@ -16,7 +16,7 @@ function Main() {
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
-      if (user) {
+      if (user !== null) {
         // 소셜 로그인 시 닉네임 자동 생성
         if (user.displayName === null) {
           const name = user.email.split('@')[0];
