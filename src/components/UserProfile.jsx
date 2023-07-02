@@ -16,8 +16,7 @@ export const defaultUserImage =
 
 function Profile({ postCount, currentUser }) {
   const [editName, setEditName] = useState(false);
-  const { uid, displayName, email } = currentUser;
-  const photoURL = auth.currentUser;
+  const { uid, displayName, photoURL, email } = currentUser;
   const [editedName, setEditedName] = useState('');
   const dispatch = useDispatch();
 
