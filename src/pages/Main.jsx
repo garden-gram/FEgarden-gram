@@ -61,12 +61,12 @@ function Main() {
   };
 
   return (
-    <>
+    <body style={{ minWidth: '950px' }}>
       <Header />
       <Sidebar openModal={openModal} />
       <PostLists />
       <Modal closeModal={closeModal} isOpenModal={isOpenModal} />
-    </>
+    </body>
   );
 }
 
