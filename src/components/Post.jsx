@@ -1,43 +1,39 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { css, styled } from 'styled-components';
-import userImg from '../assets/icon/userImg.png';
-import { db, storage } from '../firebase';
+import { auth, db, storage } from '../firebase';
 import { getDownloadURL, ref, uploadString } from 'firebase/storage';
-import { addDoc, collection } from 'firebase/firestore';
+import { addDoc, collection, doc, getDoc, getDocs, query, setDoc } from 'firebase/firestore';
 import { v4 as uuidv4 } from 'uuid';
 import { FaRegWindowClose } from 'react-icons/fa';
+import { defaultUserImage } from './UserProfile';
 
 function Post({ closeModal }) {
   const [attachment, setAttachment] = useState('');
   const [contents, setContents] = useState('');
-
-  // TODO: userData를 리덕스로 가져와야함
-  // const userObj = useSelector(state => {
-  //   return state.user
-  // })
-  const userObj = {
-    uid: '56da4645aaa',
-    name: '아이유',
-    users_img: 'default'
-  };
-
-  const { uid, name, users_img } = userObj;
+  const { uid, displayName, photoURL } = auth.currentUser;
 
   const onSubmitGram = async (e) => {
     e.preventDefault();
+    const currentUserData = await getDoc(doc(db, 'users', uid));
     try {
       if (attachment === '') return alert('이미지를 넣어주세요');
       if (contents === '') return alert('게시글 내용을 작성해주세요');
-      let confirm = window.confirm('게시하시겠습니까?');
-      if (!confirm) return;
+      if (!window.confirm('게시하시겠습니까?')) return;
+
+      if (!currentUserData.exists()) {
+        const newUserOBj = {
+          user_img: defaultUserImage,
+          nickName: displayName
+        };
+        await setDoc(doc(db, 'users', uid), newUserOBj);
+      }
 
       const attachmentRef = ref(storage, `${uid}/${uuidv4()}`);
       await uploadString(attachmentRef, attachment, 'data_url');
       const attachmentUrl = await getDownloadURL(ref(storage, attachmentRef));
       const gramObj = {
         feed_id: `${uid}/${uuidv4()}`,
-        name,
-        users_img,
+        uid,
         posts_image: attachmentUrl,
         like_count: 0,
         contents,
@@ -49,7 +45,8 @@ function Post({ closeModal }) {
       alert('성공적으로 게시되었습니다.');
       closeModal();
     } catch (err) {
-      alert('오류가 발생했습니다. 새로고침 후 다시 시도해보세요');
+      // alert('오류가 발생했습니다. 새로고침 후 다시 시도해보세요');
+      console.log(err);
     }
   };
 
@@ -84,8 +81,8 @@ function Post({ closeModal }) {
     <>
       <PostForm onSubmit={onSubmitGram}>
         <UserInfo>
-          <UserImg src={userImg} alt="user_img" />
-          <UserName>{name}</UserName>
+          <UserImg src={photoURL ?? defaultUserImage} alt="user_img" />
+          <UserName>{displayName}</UserName>
         </UserInfo>
         <ImgBox>
           <label htmlFor="file">
@@ -136,6 +133,7 @@ const UserInfo = styled.div`
 const UserImg = styled.img`
   width: 63px;
   height: 63px;
+  border-radius: 50%;
 `;
 
 const UserName = styled.p`

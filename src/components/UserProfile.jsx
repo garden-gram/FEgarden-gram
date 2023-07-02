@@ -4,88 +4,52 @@ import DefaultProfileImg from '../assets/img/blank_profile.svg';
 import { AiOutlineCheckSquare } from 'react-icons/ai';
 import { FaRegEdit } from 'react-icons/fa';
 import { PiUserSwitch } from 'react-icons/pi';
-import { addDoc, collection, getDocs, query } from 'firebase/firestore';
 import { auth, db, storage } from '../firebase';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { ref, uploadBytes, uploadString } from 'firebase/storage';
+import { onAuthStateChanged, updateProfile } from 'firebase/auth';
+import { getDownloadURL, ref, uploadBytes, uploadString } from 'firebase/storage';
+import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 
-function UserProfile() {
-  // 유저프로필 초기값 설정
+export const defaultUserImage =
+  'https://firebasestorage.googleapis.com/v0/b/gardengram-b2bb2.appspot.com/o/blank_profile.svg?alt=media&token=0d5bdcc4-87a1-4995-8a80-90764b93b63e';
+
+function Profile() {
   const [editName, setEditName] = useState(false);
-  const [currentUser, setCurrentUser] = useState(''); // 초기에 데이터 없음 -> null 병합 연산자 쓸 예정
+  const { uid, displayName, photoURL, email } = auth.currentUser;
+  const [editedName, setEditedName] = useState('');
 
-  // 구조분해할당으로 변수로 쓸 수 있음
-  console.log(currentUser);
-  const { id, NickName, email, user_img } = currentUser;
-
-  // 로그인한 유저프로필 가져오기
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        const newCurrentUser = {
-          id: user.uid,
-          NickName: user.displayName ?? user.email.split('@')[0],
-          email: user.email,
-          user_img: user.photoURL
-        };
-        setCurrentUser(newCurrentUser);
-      } else {
-        return;
-      }
-    });
-  }, [auth]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      // collection 이름이 users인 collection의 모든 document를 가져옵니다.
-      const q = query(collection(db, 'users'));
-      const querySnapshot = await getDocs(q);
-
-      const initialUsers = [];
-
-      // document의 id와 데이터를 initialUsers에 저장합니다.
-      // doc.id의 경우 따로 지정하지 않는 한 자동으로 생성되는 id입니다.
-      // doc.data()를 실행하면 해당 document의 데이터를 가져올 수 있습니다.
-      querySnapshot.forEach((doc) => {
-        initialUsers.push({ id: doc.id, ...doc.data() });
-      });
-
-      // firestore에서 가져온 데이터를 state에 전달
-      setCurrentUser(initialUsers[0]);
-    };
-    if (currentUser) {
-      fetchData();
-    }
-  }, []);
+  const fetchUserData = async () => {
+    return await getDoc(doc(db, 'users', uid));
+  };
+  fetchUserData();
 
   const onFileChange = async (e) => {
+    const currentUserData = await getDoc(doc(db, 'users', uid));
+    if (!currentUserData.exists()) {
+      const newUserOBj = {
+        user_img: defaultUserImage,
+        nickName: displayName
+      };
+      await setDoc(doc(db, 'users', uid), newUserOBj);
+    }
     const {
       target: { files }
     } = e;
-    // if (files.length === 0) return;
     const theFile = files[0];
-    const reader = new FileReader();
-    reader.onloadend = (finishedEvent) => {
-      const {
-        currentTarget: { result }
-      } = finishedEvent;
-      setCurrentUser({
-        ...currentUser,
-        user_img: result
-      });
-      console.log(result);
-    };
-    reader.readAsDataURL(theFile);
-    const attachmentRef = ref(storage, `profileImg/${id}`);
-    await uploadBytes(attachmentRef, user_img);
+    const imageRef = ref(storage, `profileImg/${uid}`);
+    await uploadBytes(imageRef, theFile);
+    const attachmentUrl = await getDownloadURL(ref(storage, imageRef));
+    updateProfile(auth.currentUser, { photoURL: attachmentUrl });
+    updateDoc(doc(db, 'users', uid), { user_img: attachmentUrl });
+    alert('프로필 사진이 변경되었습니다.');
   };
+  console.log(photoURL);
 
   return (
     // 프로필 제일 바깥 컨테이너
     <CurrentUserProfileContainer>
       {/* 기본으로 설정되는 프로필 이미지 */}
       <ProfileImageWrapper>
-        <DefaultProfileImage src={DefaultProfileImg} alt="profileImage" />
+        <DefaultProfileImage src={photoURL ?? defaultUserImage} alt="profileImage" />
         <EditProfileImgIcon>
           <label htmlFor="fileInput">
             <PiUserSwitch
@@ -105,28 +69,39 @@ function UserProfile() {
       </ProfileImageWrapper>
       {/* 프로필 내용(콘텐츠) 담는 리스트 */}
       <CurrentUserProfileList>
-        {/* 프로필 내용(콘탠츠) 좌측 부분 */}
+        {/* 프로필 내용(콘텐츠) 좌측 부분 */}
         <CurrentUserProfileContentsLeft>
-          <div>Nickname</div>
-          <div>Email</div>
+          <div>NAME</div>
+          <div>E-MAIL</div>
           <div>TOTAL POST</div>
           <div>TOTAL LIKE</div>
         </CurrentUserProfileContentsLeft>
 
-        {/* 프로필 내용(콘탠츠) 우측 부분 */}
+        {/* 프로필 내용(콘텐츠) 우측 부분 */}
         <CurrentUserProfileContentsRight>
           <div>
-            {editName ? <input /> : NickName}
-
-            {editName ? (
-              <AiOutlineCheckSquare />
-            ) : (
-              <FaRegEdit
-                onClick={() => {
-                  setEditName(!editName);
-                }}
-              />
-            )}
+            {editName ? <NameInput value={editedName} onChange={(e) => setEditedName(e.target.value)} /> : displayName}
+            <NameEditIconWrapper>
+              {editName ? (
+                <AiOutlineCheckSquare
+                  size={25}
+                  onClick={async () => {
+                    await updateProfile(auth.currentUser, {
+                      displayName: editedName
+                    });
+                    setEditName(!editName);
+                  }}
+                />
+              ) : (
+                <FaRegEdit
+                  size={25}
+                  onClick={() => {
+                    setEditedName(displayName);
+                    setEditName(!editName);
+                  }}
+                />
+              )}
+            </NameEditIconWrapper>
           </div>
           <div>{email}</div>
           <div>2</div>
@@ -139,9 +114,9 @@ function UserProfile() {
 
 // 스타일드 컴포넌트
 
-const EditIcon = styled.div`
-  width: 1.2rem;
-`;
+// const EditIcon = styled.div`
+//   width: 1.2rem;
+// `;
 
 const DefaultProfileImage = styled.img`
   width: 8rem;
@@ -206,4 +181,12 @@ const FileInput = styled.input`
   display: none;
 `;
 
-export default UserProfile;
+const NameEditIconWrapper = styled.div`
+  cursor: pointer;
+`;
+
+const NameInput = styled.input`
+  width: 150px;
+`;
+
+export default Profile;

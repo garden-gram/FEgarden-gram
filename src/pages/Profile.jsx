@@ -46,7 +46,7 @@ function Profile() {
       <Header />
       <Sidebar openModal={openModal} />
       <Modal closeModal={closeModal} isOpenModal={isOpenModal} />
-      {auth.currentUser.uid && <UserProfile userId={auth.currentUser.uid} />}
+      <UserProfile />
       <PostList />
     </>
   );

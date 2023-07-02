@@ -81,7 +81,7 @@ function ListHeader({ gram }) {
   return (
     <StInfoWrapper>
       <StProfile>
-        <StUserImg src={userImg} />
+        <StUserImg src={users_img} />
         <StUserName>{name}</StUserName>
       </StProfile>
 
