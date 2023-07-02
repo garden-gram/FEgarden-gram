@@ -26,21 +26,22 @@ function Profile() {
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        if (currentUser.uid !== undefined) fetchData();
-      } catch (error) {
-        console.log(error);
-      }
-      console.log(currentUser.uid);
+      console.log(currentUser);
       const q = query(collection(db, 'gram'), where('uid', '==', currentUser.uid), orderBy('time', 'desc'));
       const querySnapshot = await getDocs(q);
       const initialGramsData = [];
+      console.log(querySnapshot);
       querySnapshot.forEach((doc) => {
         initialGramsData.push({ id: doc.id, ...doc.data() });
         setPostCount(postCount + 1);
       });
       dispatch(getdata(initialGramsData));
     };
+    try {
+      if (currentUser.uid !== undefined) fetchData();
+    } catch (error) {
+      console.error(error);
+    }
   }, [currentUser]);
 
   // 게시물 작성 모달

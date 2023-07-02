@@ -133,6 +133,7 @@ const StUserImg = styled.img`
   height: 4.5rem;
   border-radius: 50%;
   background-color: #ffff;
+  object-fit: cover;
 `;
 
 const StUserName = styled.div`

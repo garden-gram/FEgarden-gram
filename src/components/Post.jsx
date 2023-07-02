@@ -54,7 +54,10 @@ function Post({ closeModal }) {
     const {
       target: { files }
     } = e;
-    if (files.length === 0) return;
+    if (files.length === 0) {
+      onClearAttachment();
+      return;
+    }
     const theFile = files[0];
     const reader = new FileReader();
     reader.onloadend = (finishedEvent) => {
@@ -98,7 +101,7 @@ function Post({ closeModal }) {
             </PreView>
           )}
         </ImgBox>
-        <TextBox value={contents} placeholder="내용을 입력해주세요." onChange={onTextChange} />
+        <TextBox value={contents} placeholder="내용을 입력해주세요." maxLength={70} onChange={onTextChange} />
         <Btns>
           <SubmitBtn>게시하기</SubmitBtn>
           <ModalCloseBtn onClick={closeModal}>닫기</ModalCloseBtn>
@@ -134,6 +137,7 @@ const UserImg = styled.img`
   width: 63px;
   height: 63px;
   border-radius: 50%;
+  object-fit: cover;
 `;
 
 const UserName = styled.p`
