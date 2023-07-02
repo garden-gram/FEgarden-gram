@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Header from '../components/Header';
 import Modal from '../components/Modal';
 import Sidebar from '../components/Sidebar';
-import PostList from '../components/PostList';
+import PostLists from '../components/PostLists';
 
 import { collection, getDocs, onSnapshot, orderBy, query } from 'firebase/firestore';
 import { db, auth } from '../firebase';
@@ -63,7 +63,7 @@ function Main() {
     <>
       <Header />
       <Sidebar openModal={openModal} />
-      <PostList />
+      <PostLists />
       <Modal closeModal={closeModal} isOpenModal={isOpenModal} />
     </>
   );

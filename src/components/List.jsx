@@ -1,27 +1,27 @@
 import React from 'react';
 import styled from 'styled-components';
-import PostInfo from './mainPosts/PostInfo';
-import PostLike from './mainPosts/PostLike';
-import PostContents from './mainPosts/PostContents';
+import ListHeader from './list/ListHeader';
+import ListLike from './list/ListLike';
+import ListContents from './list/ListContents';
 
-function MainPost({ gram }) {
+function List({ gram }) {
   return (
     <StPostWrapper>
-      <PostInfo gram={gram} />
+      <ListHeader gram={gram} />
       <ContentsWrapper>
         <ImgBox>
           <StImg src={gram.posts_image} />
         </ImgBox>
         <ContentsBox>
-          <PostLike gram={gram} />
-          <PostContents gram={gram} />
+          <ListLike gram={gram} />
+          <ListContents gram={gram} />
         </ContentsBox>
       </ContentsWrapper>
     </StPostWrapper>
   );
 }
 
-export default MainPost;
+export default List;
 
 const StPostWrapper = styled.div`
   width: 28rem;

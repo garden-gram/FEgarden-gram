@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 
-function PostContents({ gram }) {
+function ListContents({ gram }) {
   return (
     <>
       <StContents>{gram.contents}</StContents>
@@ -9,7 +9,7 @@ function PostContents({ gram }) {
   );
 }
 
-export default PostContents;
+export default ListContents;
 
 const StContents = styled.div`
   padding: 1rem;
@@ -19,7 +19,6 @@ const StContents = styled.div`
   white-space: pre-wrap;
   word-wrap: break-word;
   text-overflow: ellipsis;
-  // border-radius: 0 0 10px 10px;
 
   background-color: #fff;
   border-radius: 0 0 10px 10px;
