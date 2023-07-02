@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 
 function ListContents({ gram }) {
@@ -19,7 +19,6 @@ const StContents = styled.div`
   white-space: pre-wrap;
   word-wrap: break-word;
   text-overflow: ellipsis;
-  // border-radius: 0 0 10px 10px;
 
   background-color: #fff;
   border-radius: 0 0 10px 10px;
