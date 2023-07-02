@@ -9,6 +9,7 @@ import logoImage from '../assets/icon/logo_white.svg';
 import { useNavigate } from 'react-router-dom';
 import { signInWithPopup } from 'firebase/auth';
 import googleIcon from '../assets/img/google_icon.png';
+import { defaultUserImage } from '../components/UserProfile';
 
 function LoginPage() {
   const [email, setEmail] = useState('');
@@ -68,7 +69,8 @@ function LoginPage() {
 
       // 닉네임 등록
       await updateProfile(userCredential.user, {
-        displayName: nickname
+        displayName: nickname,
+        photoURL: defaultUserImage
       });
 
       // 회원가입 완료 시 확인

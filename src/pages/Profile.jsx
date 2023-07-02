@@ -26,15 +26,13 @@ function Profile() {
 
   useEffect(() => {
     const fetchData = async () => {
-      console.log(currentUser);
       const q = query(collection(db, 'gram'), where('uid', '==', currentUser.uid), orderBy('time', 'desc'));
       const querySnapshot = await getDocs(q);
       const initialGramsData = [];
-      console.log(querySnapshot);
       querySnapshot.forEach((doc) => {
         initialGramsData.push({ id: doc.id, ...doc.data() });
-        setPostCount(postCount + 1);
       });
+      setPostCount(initialGramsData.length);
       dispatch(getdata(initialGramsData));
     };
     try {
