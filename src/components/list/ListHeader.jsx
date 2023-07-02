@@ -9,9 +9,10 @@ import dot_img from '../../assets/icon/dote_edit_delete.svg';
 import userImg from '../../assets/icon/userImg.png';
 function ListHeader({ gram, name, users_img }) {
   const dispatch = useDispatch();
+  const currentUser = useSelector((state) => state.users);
   const grams = useSelector((state) => state.grams);
 
-  const { time } = gram;
+  const { time, uid } = gram;
 
   const detailDate = (a) => {
     const milliSeconds = new Date() - a;
@@ -34,7 +35,7 @@ function ListHeader({ gram, name, users_img }) {
 
   const [optionBtn, setOptionBtn] = useState(false);
   const showOptionBtn = () => {
-    setOptionBtn(true);
+    setOptionBtn(!optionBtn);
   };
 
   const btnsRef = useRef();
@@ -52,7 +53,8 @@ function ListHeader({ gram, name, users_img }) {
 
   const deleteHandler = async (id) => {
     try {
-      await deletePost(id);
+      const confirm = await deletePost(id);
+      if (!confirm) return;
       alert('게시글이 삭제 되었습니다.');
     } catch (error) {
       alert('삭제 요청이 실패 하였습니다.');
@@ -60,6 +62,7 @@ function ListHeader({ gram, name, users_img }) {
   };
 
   const deletePost = async (id) => {
+    if (!window.confirm('게시글을 삭제하시겠습니까?')) return false;
     try {
       const postRef = doc(db, 'gram', id);
       await deleteDoc(postRef);
@@ -89,12 +92,13 @@ function ListHeader({ gram, name, users_img }) {
       <StInfo>
         <StTime>{nowDate}</StTime>
         <Dot src={dot_img} alt="dot" onClick={showOptionBtn} />
-        {/* auth.currentUser.email === gram.email && (<DOte/>) */}
-        {optionBtn && (
+        {optionBtn & (uid === currentUser.uid) ? (
           <OptionBtns ref={btnsRef}>
             <EditBtn onMouseDown={() => editHandler(gram.id)}>수정</EditBtn>
             <DeleteBtn onMouseDown={() => deleteHandler(gram.id)}>삭제</DeleteBtn>
           </OptionBtns>
+        ) : (
+          ''
         )}
       </StInfo>
     </StInfoWrapper>
@@ -156,9 +160,10 @@ const OptionBtns = styled.div`
   height: 72px;
   border-radius: 10px;
   border: solid 1px #000;
+  background-color: #fff;
   position: absolute;
 
-  right: -100px;
+  right: -60px;
   display: flex;
   flex-direction: column;
   align-items: center;
