@@ -14,6 +14,9 @@ import { getdata } from '../redux/modules/gramData';
 import { onAuthStateChanged } from 'firebase/auth';
 import { getUserData } from '../redux/modules/userData';
 
+import { animateScroll as scroll } from 'react-scroll';
+import styled from 'styled-components';
+
 function Profile() {
   // 현재 사용자의 게시물 리스트
   const dispatch = useDispatch();
@@ -51,15 +54,37 @@ function Profile() {
     setIsOpenModal(false);
   };
 
+  const scrollToTop = () => {
+    scroll.scrollToTop();
+  };
+
   return (
     <body style={{ minWidth: '950px' }}>
       <Header />
       <Sidebar openModal={openModal} />
       <Modal closeModal={closeModal} isOpenModal={isOpenModal} />
       <UserProfile currentUser={currentUser} postCount={postCount} />
+      <ScrollToTopButton onClick={scrollToTop}>TOP</ScrollToTopButton>
       <PostList />
     </body>
   );
 }
 
 export default Profile;
+
+// 스타일
+const ScrollToTopButton = styled.button`
+  position: fixed;
+  bottom: 3rem;
+  right: 38rem;
+  padding: 0.7rem;
+  background-color: #d6d6d6;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  width: 3.5rem;
+  height: 3.5rem;
+  font-weight: 600;
+  font-size: 1.1rem;
+`;
