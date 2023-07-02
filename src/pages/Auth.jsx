@@ -22,7 +22,6 @@ function LoginPage() {
       const auth = getAuth();
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const uid = userCredential.user.uid;
-      console.log(auth.currentUser);
       // 로그인 성공 시 확인
       alert('로그인이 완료되었습니다.');
       navigate('/');

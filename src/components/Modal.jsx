@@ -23,11 +23,11 @@ function Modal({ isOpenModal, closeModal }) {
 export default Modal;
 
 const StModalBox = styled.div`
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   background-color: rgba(99, 99, 99, 0.4);
 
   display: flex;

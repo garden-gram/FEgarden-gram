@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import dot_img from '../../assets/icon/dote_edit_delete.svg';
 
-import userImg from '../../assets/icon/userImg.png';
 function PostInfo({ gram }) {
   const [optionBtn, setOptionBtn] = useState(false);
 
@@ -52,7 +51,7 @@ function PostInfo({ gram }) {
   return (
     <StInfoWrapper>
       <StProfile>
-        <StUserImg src={userImg} />
+        <StUserImg src={users_img} />
         <StUserName>{name}</StUserName>
       </StProfile>
 

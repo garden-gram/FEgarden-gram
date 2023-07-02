@@ -1,31 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
+import { auth } from '../firebase';
+import { useSelector } from 'react-redux';
 
 function Sidebar({ openModal, isOpenModal }) {
   const navigate = useNavigate();
 
-  // 초기값 설정 : 데이터 없음
-  const [currentUser, setCurrentUser] = useState('');
-
-  // 로그인한 유저 아이디 가져오기
-  const auth = getAuth();
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        const newCurrentUser = {
-          id: user.uid
-        };
-        setCurrentUser(newCurrentUser);
-        //  else {
-        // User is signed out
-        // }
-      }
-    });
-  }, [auth]);
-
-  const id = currentUser.id;
+  // 초기값 설정 : user 리듀서의 상태값 불러오기
+  const currentUser = useSelector((state) => state.users);
+  const id = currentUser.uid;
 
   // 현재 경로 가져오기
   const location = useLocation();
@@ -44,7 +29,7 @@ function Sidebar({ openModal, isOpenModal }) {
 
   // 1) '로그아웃' 클릭 시 3단계 : 알림창 뜨고 확인 클릭 시 logoutAndGoHome 함수 실행
   const logoutAlert = () => {
-    alert('로그아웃 하시겠습니까?');
+    if (!window.confirm('로그아웃 하시겠습니까?')) return;
     logoutAndGoHome();
   };
 
