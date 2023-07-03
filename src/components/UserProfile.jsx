@@ -16,7 +16,7 @@ export const defaultUserImage =
 
 function Profile({ postCount, currentUser }) {
   const [editName, setEditName] = useState(false);
-  const { uid, displayName, photoURL, email } = currentUser;
+  const { uid, displayName, email, photoURL } = currentUser;
   const [editedName, setEditedName] = useState('');
   const dispatch = useDispatch();
 
@@ -52,7 +52,7 @@ function Profile({ postCount, currentUser }) {
     <CurrentUserProfileContainer>
       {/* 기본으로 설정되는 프로필 이미지 */}
       <ProfileImageWrapper>
-        <DefaultProfileImage src={photoURL} alt="profileImage" />
+        <DefaultProfileImage src={photoURL || defaultUserImage} alt="profileImage" />
         <EditProfileImgIcon>
           <label htmlFor="fileInput">
             <PiUserSwitch
