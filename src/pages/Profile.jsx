@@ -26,15 +26,13 @@ function Profile() {
 
   useEffect(() => {
     const fetchData = async () => {
-      console.log(currentUser);
       const q = query(collection(db, 'gram'), where('uid', '==', currentUser.uid), orderBy('time', 'desc'));
       const querySnapshot = await getDocs(q);
       const initialGramsData = [];
-      console.log(querySnapshot);
       querySnapshot.forEach((doc) => {
         initialGramsData.push({ id: doc.id, ...doc.data() });
-        setPostCount(postCount + 1);
       });
+      setPostCount(initialGramsData.length);
       dispatch(getdata(initialGramsData));
     };
     try {
@@ -76,8 +74,8 @@ export default Profile;
 // 스타일
 const ScrollToTopButton = styled.button`
   position: fixed;
-  bottom: 3rem;
-  right: 38rem;
+  bottom: 50px;
+  left: 123px;
   padding: 0.7rem;
   background-color: #d6d6d6;
   color: #fff;
