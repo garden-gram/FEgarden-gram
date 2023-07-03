@@ -65,13 +65,13 @@
 ## 8. 구현 기능
 
 ### 1) 홈 화면
-
+![홈](https://github.com/NickYOOO/TIL/assets/108923582/66cb462a-94b2-4c97-a48b-4a2da90212e0)
 
 ### 2) 회원가입 화면/로그인화면
 ![회원가입-로그인](https://github.com/NickYOOO/create-a-blog/assets/108923582/3a7f2182-3f3d-45e5-bb56-487b55988fb7)
 
 ### 3) 게시글 작성
-
+![게시글-작성하기](https://github.com/NickYOOO/TIL/assets/108923582/8a37047d-4e60-4e69-b51c-28b3f5d48a33)
 
 ### 5) 게시물 수정
 ![수정하기](https://github.com/NickYOOO/create-a-blog/assets/108923582/966a9195-d9de-40df-b1b4-f492542ac06a)
@@ -80,7 +80,7 @@
 ![내-프로필-수정](https://github.com/NickYOOO/create-a-blog/assets/108923582/624e72e9-221c-4e0e-aba6-ca4f3ccf5e21)
 
 ### 7) 내가 작성한 게시물 모아보기(내프로필)
-
+![게시글-모아보기](https://github.com/NickYOOO/TIL/assets/108923582/f46569c0-b0e6-4320-868c-571abc3d6ace)
 
 ### 8) 404page
 ![404_1](https://github.com/NickYOOO/create-a-blog/assets/108923582/debbe516-bd86-4fef-974f-185ebcb0d148)
